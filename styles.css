@@ -26,7 +26,7 @@ body {
     background-size: 120px 138.5px;
   }
   .layer-1 {
-    top: -450px;
+    top: -400px;
     z-index: 5;
     background-image: url("layer1.png");
     background-size: 400px 208px;
