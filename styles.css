@@ -40,23 +40,16 @@ body {
   }
   .layer-3 {
     top: -700px;
-    z-index: 15;
+    z-index: 5;
     background-image: url("layer3.png");
     background-size: 300px 150px;
   }
   .layer-4 {
     top: -550px;
-    z-index: 5;
+    z-index: 15;
     background-image: url("layer4.png");
     background-size: 400px 208px;
   }
-  .layer-5 {
-    top: -770px;
-    z-index: 25;
-    background-image: url("layer5.png");
-    background-size: 300px 150px;
-  }
-
 
 .content {
   position: absolute;
