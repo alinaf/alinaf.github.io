@@ -26,13 +26,13 @@ body {
     background-size: 120px 138.5px;
   }
   .layer-1 {
-    top: -400px;
+    top: -350px;
     z-index: 5;
     background-image: url("layer1.png");
     background-size: 400px 208px;
   }
   .layer-2 {
-    top: -250px;
+    top: -220px;
     z-index: 10;
     background-image: url("layer2.png");
     background-size: 400px 375px;
