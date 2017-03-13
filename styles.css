@@ -27,27 +27,27 @@ body {
   .layer-1 {
     top: -100px;
     z-index: 5;
-    background-image: url('http://i.imgur.com/Ra2bzmb.png');
+    background-image: url("layer1.png")
   }
   .layer-2 {
     top: -50px;
     z-index: 10;
-    background-image: url('http://i.imgur.com/jSOo9SK.png');
+    background-image: url("layer2.png")
   }
   .layer-3 {
     top: -10px;
     z-index: 15;
-    background-image: url('http://i.imgur.com/DOZRBDj.png');
+    background-image: url("layer3.png")
   }
   .layer-4 {
     top: 65px;
     z-index: 20;
-    background-image: url('http://i.imgur.com/JbSR9JY.png');
+    background-image: url("layer4.png")
   }
   .layer-5 {
     top: 150px;
     z-index: 25;
-    background-image: url('http://i.imgur.com/Ti2mNxd.png');
+    background-image: url("layer5.png")
   }
 
 
