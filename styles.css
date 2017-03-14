@@ -1,55 +1,66 @@
 body {
   background: #415a6c;
   margin: 0;
-  font-family: 'Oswald';
+  font-family: 'Abel';
 }
 .parallax-container {
   position: fixed;
   overflow: visible;
-  width: 100%;
-  height: 850px;
 }
 .parallax-layer {
   width: 100%;
-  height: 850px;
+  height: 1600px;
   position: fixed;
   left: 0;
   top: 0;
-  background-position: bottom center;
-  background-repeat: repeat-x;
-  background-size: 960px 253px;
+  background-size: 1000px 1920px;
 }
   .layer-0 {
-    top: 0;
+    top: 100px;
     z-index: 5;
     background: #dbf0ff no-repeat top 40px center;
-    background-size: 120px 138.5px;
+
   }
   .layer-1 {
-    top: -350px;
+    top: -1125px;
     z-index: 5;
     background-image: url("layer1.png");
-    background-size: 400px 208px;
+    background-size: 500px 500px;
+
   }
   .layer-2 {
-    top: -220px;
+    top: -800px;
     z-index: 10;
+    right: 600px;
     background-image: url("layer2.png");
-    background-size: 400px 375px;
+    background-size: 600px 600px;
 
   }
   .layer-3 {
-    top: -700px;
+    top: -800px;
     z-index: 5;
+    right: 100px;
     background-image: url("layer3.png");
-    background-size: 300px 150px;
-  }
+    background-repeat: repeat-y;
+    float: right;
+    background-size: 600px 600px;
+
+
+
+  } /*
   .layer-4 {
     top: -500px;
     z-index: 15;
     background-image: url("layer4.png");
-    background-size: 400px 208px;
+
   }
+
+  .layer-5 {
+    top: -500px;
+    z-index: 15;
+    background-image: url("layer5.png");
+
+  }*/
 
 .content {
   position: absolute;
