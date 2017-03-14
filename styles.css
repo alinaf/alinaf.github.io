@@ -1,71 +1,68 @@
 body {
-  background: #415a6c;
+  background: #441F30;
   margin: 0;
-  font-family: 'Abel';
+  font-family: 'Oswald';
 }
 .parallax-container {
   position: fixed;
-  overflow: visible;
+  /*overflow: visible;*/
+  width: 100%;
+  /*height: 500px;*/
 }
 .parallax-layer {
   width: 100%;
-  height: 1600px;
+  height: 500px;
   position: fixed;
   left: 0;
   top: 0;
-  background-size: 1000px 1920px;
+  background-position: bottom center;
+  background-repeat: no-repeat;
+
 }
   .layer-0 {
-    top: 100px;
-    z-index: 5;
-    background: #dbf0ff no-repeat top 40px center;
-
+    top: -80px;
+    z-index: 35;
+    background: url('logo.png') no-repeat top 40px center;
+    background-size: 300px 300px;
   }
   .layer-1 {
-    top: -1125px;
+    top: -130px;
     z-index: 5;
-    background-image: url("layer1.png");
-    background-size: 500px 500px;
-
+    background-image: url('layer1.png');
+    background-repeat: repeat-x;
+    background-size: 750px 500px;
   }
   .layer-2 {
-    top: -800px;
+    top: -160px;
     z-index: 10;
-    right: 600px;
-    background-image: url("layer2.png");
-    background-size: 600px 600px;
-
+    background-image: url('layer2.png');
+    background-size: 1920px 250px;
   }
   .layer-3 {
-    top: -800px;
-    z-index: 5;
-    right: 100px;
-    background-image: url("layer3.png");
-    background-repeat: repeat-y;
+    top: -130px;
     float: right;
-    background-size: 600px 600px;
-
-
-
-  } /*
-  .layer-4 {
-    top: -500px;
     z-index: 15;
-    background-image: url("layer4.png");
-
+    background-image: url('layer3.png');
+    background-size: 1920px 300px;
+  }
+  .layer-4 {
+    top: -320px;
+    z-index: 25;
+    background-image: url('layer4.png');
+    background-size: 720px 130px;
+  }
+  .layer-5 {
+    top: -105px;
+    z-index: 35;
+    background-image: url('layer5.png');
+    background-size: 1920px 400px;
   }
 
-  .layer-5 {
-    top: -500px;
-    z-index: 15;
-    background-image: url("layer5.png");
-
-  }*/
 
 .content {
   position: absolute;
   top: 600px;
-  background: #415a6c;
+  background: #441F30;
   width: 100%;
   min-height: 1500px;
 }
