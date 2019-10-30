@@ -47,7 +47,7 @@
 
       // ***------ IMPORTING FROM DICTIONARY.TXT ------***
       
-      var dictString = readTextFile("words_alpha.txt").split("\n");
+      var dictString = readTextFile("words_alpha.txt").split("\r\n");
 
       console.log(dictString);
 
@@ -57,10 +57,7 @@
       console.log("valid=" + validWords);
       console.log(validWords.has("a"));
       console.log(validWords.has("aa"));
-
       
-      //console.log(iterator1.next().value);
-      //console.log(iterator1.next().value);
       
 
     var plurals = new Set(); // doesn't actually work because each word needs its own memory
@@ -221,24 +218,29 @@
 
   function validWord(currentWord) {
 
-       let iterator1 = validWords.values();
+       /*let iterator1 = validWords.values();
        for (let i = 0; i < validWords.size; i++) {
 
            if (iterator1.next().value.localeCompare(currentWord)) {
+               console.log(iterator1.value);
                console.log("Found!");
                break;
            }
            else {
                return "invalid word!";
            }
-       }
+       }*/
 
-    /*if(!validWords.has(currentWord)) {
+      
+    
+    if(!validWords.has(currentWord)) {
       return "invalid word!";
     }
     if(plurals.has(currentWord)) {
       return "no plurals!";
-    }*/
+      }
+
+
     var rearranging = false;
     var dimensions;
   // can only pick from one word (well you can pick two if you use all the letters)
