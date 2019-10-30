@@ -41,7 +41,7 @@
 
       var letterBag = shuffle(unshuffledLetterBag);
       
-      console.log(letterBag);
+      console.log(letterBag.length);
 
      var pos = 0; // no queue in JS apparently so just use this
 
@@ -126,7 +126,7 @@
    // var ranks = this.add.text(250, 635, rankString, { font: "18px Karla", fill: '#000000'});
     // make grid
     var width = 0;
-    for(i = 0; i < 9; i++){
+    for(i = 0; i < 15; i++){ // change this!!
       width += 90;
       
       const square = this.add.sprite(width, 100, 'square');
@@ -204,14 +204,15 @@
         rawFile.open("GET", file, false);
         rawFile.onreadystatechange = function ()
         {
-            if(rawFile.readyState === 4)
+            /*if(rawFile.readyState === 4)
             {
                 if(rawFile.status === 200 || rawFile.status == 0)
                 {
                     allText = rawFile.responseText;
                     //alert(allText);
                 }
-            }
+            }*/
+            allText = rawFile.responseText;
         }
         rawFile.send(null);
         return allText;
