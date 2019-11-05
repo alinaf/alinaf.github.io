@@ -14,19 +14,6 @@
     var squareToTextBox = new Map();
     var currentSquares = [];
     var squareToLocation = new Map();
-    // demo 1: rat + star + cake
-    // demo 2: rat + star + rackets
-
-      // ***------ HARD CODED WORDS ------***
-      //var letterBag = ["r", "t", "a", "s", "k", "a", "e", "c"];
-      
-
-      /*var validWords = new Set(["rat", "rats", "art", "tar", "task", "star", "cars",
-          "carts", "rackets", "cake", "cakes", "restack", "casket", "creaks", "racket",
-          "tracks", "karates", "takers", "karats", "skater"]);
-        */ 
-
-      
       
       var unshuffledLetterBag = new Array();
       var letterBag = new Array();
@@ -48,7 +35,7 @@
 
       // ***------ IMPORTING FROM DICTIONARY.TXT ------***
       
-      var dictString = readTextFile("words_alpha.txt").split("\r\n");
+      var dictString = readTextFile("words_alpha.txt").split("\n");
 
       console.log(dictString);
 
@@ -100,7 +87,6 @@
       this.load.image('excellent', 'assets/excellent.png');
       this.load.image('nice', 'assets/nice.png');
       this.load.image('submit', 'assets/submit.png');
-      this.load.audio('music', 'assets/whatsleft.mp3');
     }
     function create ()
     {
@@ -110,9 +96,6 @@
       currentWordText.setOrigin(0.5);
       scoreText = this.add.text(700, 800, "score: 0", { font: "70px Karla", fill: '#000000'});
       scoreText.setOrigin(0.5);
-        const music = this.sound.add('music');
-      music.setLoop(true);
-      music.play();
       this.input.keyboard.on('keydown_ENTER', submitWord);
       this.input.keyboard.on('keydown_BACKSPACE', deleteLetter);
       this.input.keyboard.on('keydown_SPACE', drawTile);
