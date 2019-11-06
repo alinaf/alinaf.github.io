@@ -1,7 +1,13 @@
 const playerMap = {};
 var Game = {};
 Game.addNewPlayer = function(id,x,y){
-	playerMap[id] = "hi";
+	console.log('add player')
+};
+Game.removePlayer = function(id){
+	console.log('remove');
+};
+Game.print = function(data){
+	console.log('player ' + data.id + " played " + data.word);
 };
 const brightBlue = "#459ac4";
 var currentWord = "";
@@ -122,6 +128,7 @@ async function submitWord() {
 	plurals.add(currentWord + "s");
 	var bonus = calculateScore(currentWord);
 	score += bonus;
+	Client.submitWord(currentWord);
 	scoreText.setText("score: " + score);
 	const dimensions = canRearrange();
 	if(dimensions) {
