@@ -1,7 +1,7 @@
 {
-  "name": "basic-mmo-phaser",
+  "name": "grabble",
   "version": "1.0.0",
-  "description": " Very basic multiplayer online game example made with Phaser, Node.js and Socket.io ",
+  "description": "Prototype of grams made with Phaser, Node.js and Socket.io ",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Jerenaux/basic-mmo-phaser.git"
+    "url": "git+https://github.com/alinaf/alinaf.github.io"
   },
   "keywords": [
     "Phaser",
@@ -18,12 +18,12 @@
     "Node.js",
     "socket.io"
   ],
-  "author": "Jerome Renaux",
+  "author": "Alina Abidi",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Jerenaux/basic-mmo-phaser/issues"
+    "url": "https://github.com/alinaf/alinaf.github.io/issues"
   },
-  "homepage": "https://github.com/Jerenaux/basic-mmo-phaser#readme",
+  "homepage": "https://github.com/alinaf/alinaf.github.io#readme",
   "dependencies": {
     "express": "^4.15.2",
     "socket.io": "^1.7.3"
