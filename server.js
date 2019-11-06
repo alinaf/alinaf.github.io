@@ -11,17 +11,14 @@ app.get('/',function(req,res){
     res.sendFile(__dirname+'/index.html');
 });
 
-app.get('/',function(req,res){
-    res.sendFile(__dirname+'/index.html'); 
-});
+server.lastPlayderID = 0;
 
-server.listen(8081,function(){ // Listens to port 8081
+server.listen(process.env.PORT || 8081,function(){
     console.log('Listening on '+server.address().port);
 });
 
-server.lastPlayderID = 0; // Keep track of the last id assigned to a new player
-
 io.on('connection',function(socket){
+
     socket.on('newplayer',function(){
         socket.player = {
             id: server.lastPlayderID++,
@@ -30,6 +27,21 @@ io.on('connection',function(socket){
         };
         socket.emit('allplayers',getAllPlayers());
         socket.broadcast.emit('newplayer',socket.player);
+
+        socket.on('click',function(data){
+            console.log('click to '+data.x+', '+data.y);
+            socket.player.x = data.x;
+            socket.player.y = data.y;
+            io.emit('move',socket.player);
+        });
+
+        socket.on('disconnect',function(){
+            io.emit('remove',socket.player.id);
+        });
+    });
+
+    socket.on('test',function(){
+        console.log('test received');
     });
 });
 
