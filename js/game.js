@@ -1,5 +1,6 @@
 const playerMap = {};
 var Game = {};
+var name = "";
 Game.addNewPlayer = function(id,x,y){
 	console.log('add player')
 };
@@ -7,8 +8,11 @@ Game.removePlayer = function(id){
 	console.log('remove');
 };
 Game.print = function(data){
-	console.log('player ' + data.id + " played " + data.word + " for " + data.score);
+	var displayName = name ? name : "Player " + data.id;
+	var points = data.score == 1 ? " point!" : " points!";
+	bonusText.setText(displayName + " played " + data.word + " for " + data.score + points);
 };
+
 const brightBlue = "#459ac4";
 var currentWord = "";
 var wordStrings = [];
@@ -58,6 +62,7 @@ var camera;
 var score = 0;
 var scoreText;
 var showingMessage = false;
+var bonusText;
 
 function preload ()
 {
@@ -70,6 +75,8 @@ function preload ()
 }
 function create ()
 {
+	bonusText = this.add.text(700, 45, "", { font: "45px Karla", fill: '#000000'});
+	bonusText.setOrigin(0.5);
 	Client.askNewPlayer();
 	context = this;
 	camera = this.cameras.main;
@@ -91,7 +98,7 @@ function create ()
     for(i = 0; i < 15; i++){ // change this!!
     	width += 90;
 
-    	const square = this.add.sprite(width, 100, 'square');
+    	const square = this.add.sprite(width, 150, 'square');
     	square.tint = 0x459ac4;
     	text = this.add.text(square.x - 18, square.y - 33, letterBag[i], { font: "60px Karla", fill: '#FFFFFF' });
     	square.setInteractive();
@@ -129,6 +136,8 @@ async function submitWord() {
 	var bonus = calculateScore(currentWord);
 	score += bonus;
 	Client.submitWord(currentWord, score);
+	var points = bonus == 1 ? " point!" : " points!";
+	bonusText.setText("You played " + currentWord + " for " + bonus + points);
 	scoreText.setText("score: " + score);
 	const dimensions = canRearrange();
 	if(dimensions) {
