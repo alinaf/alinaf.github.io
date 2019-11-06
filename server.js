@@ -36,7 +36,7 @@ io.on('connection',function(socket){
         });
 
         socket.on('submit',function(data){
-            socket.broadcast.emit('print',{id: socket.player.id, word: data});
+            socket.broadcast.emit('print',{id: socket.player.id, word: data.word, score: data.score});
         });
 
         socket.on('disconnect',function(){

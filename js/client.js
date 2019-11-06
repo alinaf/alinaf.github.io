@@ -14,8 +14,8 @@ Client.sendClick = function(x,y){
   Client.socket.emit('click',{x:x,y:y});
 };
 
-Client.submitWord = function(word){
-  Client.socket.emit('submit',word);
+Client.submitWord = function(word, score){
+  Client.socket.emit('submit',{word: word, score: score});
 };
 
 Client.socket.on('newplayer',function(data){
