@@ -38,8 +38,8 @@
     var left = true;
     var config = {
     	type: Phaser.WEBGL,
-    	width: window.innerWidth * window.devicePixelRatio,
-    	height: window.innerHeight * window.devicePixelRatio,
+    	width: 1400,
+      	height: 900,
     	backgroundColor: "#d3e8e8",
     	scene: {
     		preload: preload,
@@ -303,6 +303,7 @@ function calculateScore(word) {
 WebFontConfig = {
 	google: { families: ["Karla"] }
 };
+
 (function () {
 	var wf = document.createElement('script');
 	wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
