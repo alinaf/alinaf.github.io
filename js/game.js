@@ -44,8 +44,8 @@ var letterBag = Phaser.Utils.Array.Shuffle(unshuffledLetterBag);
       var left = true;
       var config = {
       	type: Phaser.WEBGL,
-      	width: 1400,
-      	height: 900,
+      	width: window.innerWidth - 50,
+      	height: window.innerHeight - 50,
       	parent: 'game',
       	backgroundColor: "#d3e8e8",
       	scene: {
@@ -80,9 +80,9 @@ function create ()
 	Client.askNewPlayer();
 	context = this;
 	camera = this.cameras.main;
-	currentWordText = this.add.text(700, 650, "", { font: "70px Karla", fill: '#000000' });
+	currentWordText = this.add.text(700, window.innerHeight - 200, "", { font: "70px Merriweather", fill: '#054f4a' });
 	currentWordText.setOrigin(0.5);
-	scoreText = this.add.text(700, 800, "score: 0", { font: "70px Karla", fill: '#000000'});
+	scoreText = this.add.text(700, window.innerHeight - 100, "score: 0", { font: "55px Karla", fill: '#000000'});
 	scoreText.setOrigin(0.5);
 	this.input.keyboard.on('keydown_ENTER', submitWord);
 	this.input.keyboard.on('keydown_BACKSPACE', deleteLetter);
@@ -100,7 +100,7 @@ function create ()
 
     	const square = this.add.sprite(width, 150, 'square');
     	square.tint = 0x459ac4;
-    	text = this.add.text(square.x - 18, square.y - 33, letterBag[i], { font: "60px Karla", fill: '#FFFFFF' });
+    	text = this.add.text(square.x - 18, square.y - 33, letterBag[i], { font: "60px Merriweather", fill: '#FFFFFF' });
     	square.setInteractive();
     	text.visible = false;
     	square.visible = false;
@@ -274,7 +274,7 @@ function rearrange(context, word, width, height) {
 		square.on('pointerup', function(pointer) {
 			updateString(this, letterMap.get(this));
 		});
-		text = context.add.text(square.x - 18, square.y - 33, word[i], { font: "60px Karla", fill: '#FFFFFF' });
+		text = context.add.text(square.x - 18, square.y - 33, word[i], { font: "60px Merriweather", fill: '#FFFFFF' });
 		square.setInteractive();
 		letterMap.set(square, word[i]);
 		squareToTextBox.set(square, text);
@@ -299,7 +299,7 @@ function addWord(context, word) {
 		square.on('pointerup', function(pointer) {
 			updateString(this, letterMap.get(this));
 		});
-		text = context.add.text(square.x - 18, square.y - 33, word[i], { font: "60px Karla", fill: '#FFFFFF' });
+		text = context.add.text(square.x - 18, square.y - 33, word[i], { font: "60px Merriweather", fill: '#FFFFFF' });
 		square.setInteractive();
 		letterMap.set(square, word[i]);
 		squareToTextBox.set(square, text);
@@ -315,7 +315,7 @@ function calculateScore(word) {
 }
 
 WebFontConfig = {
-	google: { families: ["Karla"] }
+	google: { families: ["Karla", "Merriweather"] }
 };
 
 (function () {
