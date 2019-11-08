@@ -361,7 +361,7 @@ function addWord(context, word, left) {
 		squareToTextBox.set(square, text);
 	}
 	if(left) lpos += 85;
-	if(right) rpos += 85;
+	if(!left) rpos += 85;
 }
 
 function calculateScore(word) {
