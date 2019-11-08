@@ -14,6 +14,7 @@ Game.print = function(data) {
 	var displayName = name ? name : "Player " + data.id;
 	var points = data.score == 1 ? " point!" : " points!";
 	bonusText.setText(displayName + " played " + data.word + " for " + data.score + points);
+	addWord(context, data.word, !p1);
 };
 
 Game.setTileBag = function(data) {
@@ -44,7 +45,8 @@ const dictString = readTextFile("assets/words_alpha.txt").split("\n");
 
 const validWords = new Set(dictString);
 
-var currHeight = 200;
+var lpos = 200; // left current height
+var rpos = 200; // right current height
 var left = true;
 var config = {
 	type: Phaser.WEBGL,
@@ -181,7 +183,7 @@ async function submitWord() {
 	scoreText.setText("score: " + score);
 	//const dimensions = canRearrange();
 	//
-	addWord(context, currentWord);
+	addWord(context, currentWord, p1);
 	//}
 	currentWord = "";
 	currentWordText.setText(currentWord);
@@ -223,7 +225,6 @@ function validWord(currentWord) {
 	if (plurals.has(currentWord)) {
 		return "no plurals!";
 	}
-
 
 	var rearranging = false;
 	var dimensions;
@@ -329,8 +330,9 @@ function drawTile() {
 // 	}
 // }
 
-function addWord(context, word) {
-	var width = p1 ? 0 : w/2;
+function addWord(context, word, left) {
+	var width = left ? 0 : w/2;
+	var currHeight = left ? lpos : rpos;
 	const startWidth = width;
 	for (i = 0; i < word.length; i++) {
 		width += 75;
@@ -358,7 +360,8 @@ function addWord(context, word) {
 		letterMap.set(square, word[i]);
 		squareToTextBox.set(square, text);
 	}
-    currHeight += 85;
+	if(left) lpos += 85;
+	if(right) rpos += 85;
 }
 
 function calculateScore(word) {
