@@ -10,6 +10,11 @@ Client.askNewPlayer = function(){
     Client.socket.emit('newplayer');
 };
 
+Client.startGame = function(tileBag){
+    console.log(1);
+    Client.socket.emit('start', tileBag);
+};
+
 Client.sendClick = function(x,y){
   Client.socket.emit('click',{x:x,y:y});
 };
@@ -24,6 +29,10 @@ Client.socket.on('newplayer',function(data){
 
 Client.socket.on('print',function(data){
    Game.print(data);
+});
+
+Client.socket.on('tilebag',function(data){
+   Game.setTileBag(data);
 });
 
 Client.socket.on('allplayers',function(data){

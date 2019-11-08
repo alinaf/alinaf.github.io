@@ -35,6 +35,10 @@ io.on('connection',function(socket){
             io.emit('move',socket.player);
         });
 
+        socket.on('start',function(data){
+            io.emit('tilebag', data);
+        });
+
         socket.on('submit',function(data){
             socket.broadcast.emit('print',{id: socket.player.id, word: data.word, score: data.score});
         });
