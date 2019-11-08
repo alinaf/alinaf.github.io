@@ -17,10 +17,15 @@ Game.print = function(data) {
 };
 
 Game.setTileBag = function(data) {
-	console.log('hi');
+	start.destroy();
 	letterBag = data;
 	addTiles();
 };
+
+// dimensions
+const w = window.innerWidth;
+const h = window.innerHeight;
+// const topThird = h/3;
 
 var letterBag;
 const brightBlue = "#459ac4";
@@ -42,10 +47,10 @@ var currHeight = 300;
 var left = true;
 var config = {
 	type: Phaser.WEBGL,
-	width: window.innerWidth - 50,
-	height: window.innerHeight - 50,
+	width: window.innerWidth - 20,
+	height: window.innerHeight - 20,
 	parent: 'game',
-	backgroundColor: "#d3e8e8",
+	backgroundColor: "#FEEDE8",
 	scene: {
 		preload: preload,
 		create: create,
@@ -64,6 +69,7 @@ var showingMessage = false;
 var bonusText;
 var instructions;
 var instructionsShowing = false;
+var start;
 
 function preload() {
 	this.load.image('square', 'assets/square.png');
@@ -75,7 +81,10 @@ function preload() {
 }
 
 function create() {
-	bonusText = this.add.text(700, 45, "", {
+	// waste another hour on this line later please
+	var line = this.add.line(w/2, h/2 + 50, 0, 0, 0, 3*h/4, 0xE6AC8E);
+	line.setLineWidth(5);
+	bonusText = this.add.text(middleW, 45, "", {
 		font: "45px Karla",
 		fill: '#000000'
 	});
@@ -83,12 +92,12 @@ function create() {
 	Client.askNewPlayer();
 	context = this;
 	camera = this.cameras.main;
-	currentWordText = this.add.text(700, window.innerHeight - 200, "", {
+	currentWordText = this.add.text(w/2, h - 200, "", {
 		font: "70px Merriweather",
 		fill: '#054f4a'
 	});
 	currentWordText.setOrigin(0.5);
-	scoreText = this.add.text(700, window.innerHeight - 100, "score: 0", {
+	scoreText = this.add.text(w/2, h - 100, "score: 0", {
 		font: "55px Karla",
 		fill: '#000000'
 	});
@@ -96,10 +105,12 @@ function create() {
 	this.input.keyboard.on('keydown_ENTER', submitWord);
 	this.input.keyboard.on('keydown_BACKSPACE', deleteLetter);
 	this.input.keyboard.on('keydown_SPACE', drawTile);
-	const start = this.add.sprite(700, 300, 'submit');
+	start = this.add.sprite(700, 300, 'submit');
 	start.setInteractive();
 	start.on('pointerup', function(pointer) {
 		Client.startGame(getTileBag())
+		console.log(h);
+console.log(h/3);
 		this.destroy();
 	});
 }
