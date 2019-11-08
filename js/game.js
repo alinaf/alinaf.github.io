@@ -27,6 +27,7 @@ const w = window.innerWidth;
 const h = window.innerHeight;
 // const topThird = h/3;
 
+var p1 = false;
 var letterBag;
 const brightBlue = "#459ac4";
 var currentWord = "";
@@ -43,7 +44,7 @@ const dictString = readTextFile("assets/words_alpha.txt").split("\n");
 
 const validWords = new Set(dictString);
 
-var currHeight = 300;
+var currHeight = 200;
 var left = true;
 var config = {
 	type: Phaser.WEBGL,
@@ -73,6 +74,7 @@ var start;
 
 function preload() {
 	this.load.image('square', 'assets/square.png');
+	this.load.image('tile', 'assets/tile.png');
 	this.load.image('controls', 'assets/controls.png');
 	this.load.image('ranout', 'assets/ranout.png');
 	this.load.image('excellent', 'assets/excellent.png');
@@ -84,8 +86,8 @@ function create() {
 	// waste another hour on this line later please
 	var line = this.add.line(w/2, h/2 + 50, 0, 0, 0, 3*h/4, 0xE6AC8E);
 	line.setLineWidth(5);
-	bonusText = this.add.text(middleW, 45, "", {
-		font: "45px Karla",
+	bonusText = this.add.text(w/2, 15, "", {
+		font: "20px Karla",
 		fill: '#000000'
 	});
 	bonusText.setOrigin(0.5);
@@ -109,8 +111,7 @@ function create() {
 	start.setInteractive();
 	start.on('pointerup', function(pointer) {
 		Client.startGame(getTileBag())
-		console.log(h);
-console.log(h/3);
+		p1 = true; // started game
 		this.destroy();
 	});
 }
@@ -132,10 +133,9 @@ function addTiles() {
     // make grid
     var width = 0;
     for (i = 0; i < 15; i++) { // change this!!
-    	width += 90;
-
-    	const square = context.add.sprite(width, 150, 'square');
-    	square.tint = 0x459ac4;
+    	width += 85;
+    	const square = context.add.sprite(width, 75, 'tile');
+    	square.tint = 0xE6AC8E;
     	text = context.add.text(square.x - 18, square.y - 33, letterBag[i], {
     		font: "60px Merriweather",
     		fill: '#FFFFFF'
@@ -146,10 +146,10 @@ function addTiles() {
     	letterMap.set(square, letterBag[i]);
     	squareToTextBox.set(square, text);
     	square.on('pointerover', function(pointer) {
-    		this.setTint(0x054f4a);
+    		this.setTint(0xE5381B);
     	});
     	square.on('pointerout', function(pointer) {
-    		this.setTint(0x459ac4);
+    		this.setTint(0xE6AC8E);
     	});
     	square.on('pointerup', function(pointer) {
     		updateString(this, letterMap.get(this));
@@ -179,13 +179,10 @@ async function submitWord() {
 	var points = bonus == 1 ? " point!" : " points!";
 	bonusText.setText("You played " + currentWord + " for " + bonus + points);
 	scoreText.setText("score: " + score);
-	const dimensions = canRearrange();
-	if (dimensions) {
-		console.log(dimensions);
-		rearrange(context, currentWord, dimensions.width, dimensions.height);
-	} else {
-		addWord(context, currentWord);
-	}
+	//const dimensions = canRearrange();
+	//
+	addWord(context, currentWord);
+	//}
 	currentWord = "";
 	currentWordText.setText(currentWord);
 	var bonusImage;
@@ -288,82 +285,80 @@ function drawTile() {
 	pos++;
 }
 
-function canRearrange(word) {
-	for (i = 0; i < currentSquares.length; i++) {
-		if (squareToLocation.has(currentSquares[i])) {
-			const loc = squareToLocation.get(currentSquares[i]);
-			return {
-				width: loc.width,
-				height: loc.height
-			};
-		}
-	}
-	return false;
-}
+// function canRearrange(word) {
+// 	for (i = 0; i < currentSquares.length; i++) {
+// 		if (squareToLocation.has(currentSquares[i])) {
+// 			const loc = squareToLocation.get(currentSquares[i]);
+// 			return {
+// 				width: loc.width,
+// 				height: loc.height
+// 			};
+// 		}
+// 	}
+// 	return false;
+// }
 
-function rearrange(context, word, width, height) {
-	const startWidth = width;
-	for (i = 0; i < word.length; i++) {
-		width += 90;
+// function rearrange(context, word, width, height) {
+// 	const startWidth = width;
+// 	for (i = 0; i < word.length; i++) {
+// 		width += 75;
 
-		const square = context.add.sprite(width, height, 'square');
-		squareToLocation.set(square, {
-			height: currHeight,
-			width: startWidth,
-			length: word.length
-		});
-		square.tint = 0x459ac4;
-		square.on('pointerover', function(pointer) {
-			this.setTint(0x054f4a);
-		});
-		square.on('pointerout', function(pointer) {
-			this.setTint(0x459ac4);
-		});
-		square.on('pointerup', function(pointer) {
-			updateString(this, letterMap.get(this));
-		});
-		text = context.add.text(square.x - 18, square.y - 33, word[i], {
-			font: "60px Merriweather",
-			fill: '#FFFFFF'
-		});
-		square.setInteractive();
-		letterMap.set(square, word[i]);
-		squareToTextBox.set(square, text);
-	}
-}
+// 		const square = context.add.sprite(width, height, 'square');
+// 		squareToLocation.set(square, {
+// 			height: currHeight,
+// 			width: startWidth,
+// 			length: word.length
+// 		});
+// 		square.tint = 0xE6AC8E;
+// 		square.on('pointerover', function(pointer) {
+// 			this.setTint(0xE5381B);
+// 		});
+// 		square.on('pointerout', function(pointer) {
+// 			this.setTint(0xE6AC8E);
+// 		});
+// 		square.on('pointerup', function(pointer) {
+// 			updateString(this, letterMap.get(this));
+// 		});
+// 		text = context.add.text(square.x - 18, square.y - 33, word[i], {
+// 			font: "50px Merriweather",
+// 			fill: '#FFFFFF'
+// 		});
+// 		square.setInteractive();
+// 		letterMap.set(square, word[i]);
+// 		squareToTextBox.set(square, text);
+// 	}
+// }
 
 function addWord(context, word) {
-	var width = left ? 0 : 750;
+	var width = p1 ? 0 : w/2;
 	const startWidth = width;
-	left = !left;
 	for (i = 0; i < word.length; i++) {
-		width += 90;
-
+		width += 75;
 		const square = context.add.sprite(width, currHeight, 'square');
 		squareToLocation.set(square, {
 			height: currHeight,
 			width: startWidth,
 			length: word.length
 		});
-		square.tint = 0x459ac4;
+		square.tint = 0xE6AC8E;
 		square.on('pointerover', function(pointer) {
-			this.setTint(0x054f4a);
+			this.setTint(0xE5381B);
 		});
 		square.on('pointerout', function(pointer) {
-			this.setTint(0x459ac4);
+			this.setTint(0xE6AC8E);
 		});
 		square.on('pointerup', function(pointer) {
 			updateString(this, letterMap.get(this));
 		});
 		text = context.add.text(square.x - 18, square.y - 33, word[i], {
-			font: "60px Merriweather",
+			font: "50px Merriweather",
 			fill: '#FFFFFF'
 		});
 		square.setInteractive();
 		letterMap.set(square, word[i]);
 		squareToTextBox.set(square, text);
 	}
-    if (left) currHeight += 120; // every other time
+    currHeight += 85;
 }
 
 function calculateScore(word) {
