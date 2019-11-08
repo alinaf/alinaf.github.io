@@ -63,6 +63,8 @@ var score = 0;
 var scoreText;
 var showingMessage = false;
 var bonusText;
+var instructions;
+var instructionsShowing = false;
 
 function preload ()
 {
@@ -87,10 +89,11 @@ function create ()
 	this.input.keyboard.on('keydown_ENTER', submitWord);
 	this.input.keyboard.on('keydown_BACKSPACE', deleteLetter);
 	this.input.keyboard.on('keydown_SPACE', drawTile);
-	const instructions = this.add.sprite(700, 300, 'controls');
+	instructions = this.add.sprite(700, 300, 'controls');
 	instructions.setInteractive();
 	instructions.on('pointerup', function(pointer) {
 		this.destroy();
+		instructionsShowing = false;
 	});
 	
     // make grid
@@ -118,6 +121,7 @@ function create ()
     	bagSquares.push(square);
     }
     drawTile();
+    instructionsShowing = true; // after draw tile
 }
 async function submitWord() {
 	if(currentWord.length < 3) return;
@@ -135,7 +139,7 @@ async function submitWord() {
 	plurals.add(currentWord + "s");
 	var bonus = calculateScore(currentWord);
 	score += bonus;
-	Client.submitWord(currentWord, score);
+	Client.submitWord(currentWord, bonus);
 	var points = bonus == 1 ? " point!" : " points!";
 	bonusText.setText("You played " + currentWord + " for " + bonus + points);
 	scoreText.setText("score: " + score);
@@ -232,6 +236,7 @@ function updateString(square, letter) {
     // only use letters from one word and/or center tiles
 }
 function drawTile() {
+	if(instructionsShowing) instructions.destroy();
 	if(pos == letterBag.length) {
 		if(!showingMessage) {
 			const ranout = context.add.sprite(700, 300, 'ranout');
