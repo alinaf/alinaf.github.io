@@ -25,7 +25,8 @@
   },
   "homepage": "https://github.com/alinaf/alinaf.github.io#readme",
   "dependencies": {
-    "express": "^4.15.2",
-    "socket.io": "^1.7.3"
+    "express": "^4.17.1",
+    "server": "^1.0.19",
+    "socket.io": "^1.7.4"
   }
 }

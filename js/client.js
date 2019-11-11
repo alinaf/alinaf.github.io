@@ -10,6 +10,10 @@ Client.askNewPlayer = function(){
     Client.socket.emit('newplayer');
 };
 
+Client.sendTile = function () {
+    Client.socket.emit('sendtile');
+};
+
 Client.startGame = function(tileBag){
     console.log(1);
     Client.socket.emit('start', tileBag);
@@ -25,6 +29,10 @@ Client.submitWord = function(word, score){
 
 Client.socket.on('newplayer',function(data){
     Game.addNewPlayer(data.id,data.x,data.y);
+});
+
+Client.socket.on('sendtile', function (data) {
+    Game.drawTile();
 });
 
 Client.socket.on('print',function(data){
@@ -48,5 +56,3 @@ Client.socket.on('allplayers',function(data){
         Game.removePlayer(id);
     });
 });
-
-
