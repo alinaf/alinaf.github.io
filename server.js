@@ -39,6 +39,12 @@ io.on('connection',function(socket){
             io.emit('tilebag', data);
         });
 
+
+        socket.on('newtile', function () {
+            console.log('hello alina!');
+            socket.broadcast.emit('newtile');
+        });
+
         socket.on('submit',function(data){
             socket.broadcast.emit('print',{id: socket.player.id, word: data.word, score: data.score});
         });

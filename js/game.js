@@ -23,6 +23,13 @@ Game.setTileBag = function (data) {
     addTiles();
 };
 
+Game.newTile = function () {
+    drawTile(false);
+    console.log('hi sky')
+};
+
+
+
 // dimensions
 const w = window.innerWidth;
 const h = window.innerHeight;
@@ -41,9 +48,11 @@ var squareToLocation = new Map();
 var pos = 0; // no queue in JS apparently so just use this
 var plurals = new Set(); // doesn't actually work because each word needs its own memory
 // put "s" in (hacky), lots of complexities i'm skimming over
-const dictString = readTextFile("assets/words_alpha.txt").split("\n");
+const dictString = readTextFile("assets/words_alpha.txt").split(/\s+/);
 
 const validWords = new Set(dictString);
+
+console.log(validWords);
 
 var lpos = 200; // left current height
 var rpos = 200; // right current height
@@ -108,7 +117,7 @@ function create() {
     scoreText.setOrigin(0.5);
     this.input.keyboard.on('keydown_ENTER', submitWord);
     this.input.keyboard.on('keydown_BACKSPACE', deleteLetter);
-    this.input.keyboard.on('keydown_SPACE', drawTile);
+    this.input.keyboard.on('keydown_SPACE', function () { return drawTile(true); });
     start = this.add.sprite(700, 300, 'submit');
     start.setInteractive();
     start.on('pointerup', function (pointer) {
@@ -158,7 +167,8 @@ function addTiles() {
         });
         bagSquares.push(square);
     }
-    drawTile();
+    console.log('ahhh');
+    drawTile(true);
 }
 
 async function submitWord() {
@@ -267,7 +277,7 @@ function updateString(square, letter) {
     // only use letters from one word and/or center tiles
 }
 
-function drawTile() {
+function drawTile(isSpacebar) {
     if (instructionsShowing) instructions.destroy();
     if (pos == letterBag.length) {
         if (!showingMessage) {
@@ -284,6 +294,10 @@ function drawTile() {
     bagSquares[pos].visible = true;
     squareToTextBox.get(bagSquares[pos]).visible = true;
     pos++;
+    if (isSpacebar) {
+        Client.newTile();
+    }
+    
 }
 
 // function canRearrange(word) {

@@ -10,13 +10,14 @@ Client.askNewPlayer = function(){
     Client.socket.emit('newplayer');
 };
 
-Client.sendTile = function () {
-    Client.socket.emit('sendtile');
-};
-
 Client.startGame = function(tileBag){
     console.log(1);
     Client.socket.emit('start', tileBag);
+};
+
+Client.newTile = function () {
+    console.log('testing 750 pm')
+    Client.socket.emit('newtile');
 };
 
 Client.sendClick = function(x,y){
@@ -27,13 +28,15 @@ Client.submitWord = function(word, score){
   Client.socket.emit('submit',{word: word, score: score});
 };
 
+Client.socket.on('newtile', function() {
+    console.log('gonna make a new tile')
+    Game.newTile();
+});
+
 Client.socket.on('newplayer',function(data){
     Game.addNewPlayer(data.id,data.x,data.y);
 });
 
-Client.socket.on('sendtile', function (data) {
-    Game.drawTile();
-});
 
 Client.socket.on('print',function(data){
    Game.print(data);
