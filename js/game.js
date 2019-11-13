@@ -15,6 +15,8 @@ Game.print = function (data) {
     var points = data.score == 1 ? " point!" : " points!";
     bonusText.setText(displayName + " played " + data.word + " for " + data.score + points);
     addWord(context, data.word, !p1);
+    letterBagTiles = data.tiles;
+    draw();
 };
 
 Game.setTileBag = function (data) {
@@ -191,7 +193,6 @@ async function submitWord() {
     plurals.add(currentWord + "s");
     var bonus = calculateScore(currentWord);
     score += bonus;
-    Client.submitWord(currentWord, bonus);
     var points = bonus == 1 ? " point!" : " points!";
     bonusText.setText("You played " + currentWord + " for " + bonus + points);
     scoreText.setText("score: " + score);
@@ -199,8 +200,6 @@ async function submitWord() {
     //
     addWord(context, currentWord, p1);
     //}
-    currentWord = "";
-    currentWordText.setText(currentWord);
     var bonusImage;
     if (bonus > 10) {
         bonusImage = context.add.sprite(700, 300, 'excellent');
@@ -217,12 +216,12 @@ async function submitWord() {
     }
   
     deleteIndices.sort(function(a,b){ return a - b; });
-      console.log(deleteIndices);
-    console.log(letterBagTiles);
     for (var i = deleteIndices.length -1; i >= 0; i--){
         letterBagTiles.splice(deleteIndices[i],1);
     }
-    console.log(letterBagTiles);
+    Client.submitWord(currentWord, bonus, letterBagTiles);
+    currentWord = "";
+    currentWordText.setText(currentWord);
     currentSquares = [];
     draw();
     if (bonusImage) {
