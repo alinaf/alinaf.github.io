@@ -171,6 +171,7 @@ function getTileBag() {
 
 function draw() {
     if(previousTiles.length != 0) {
+        // delete from map
         for(i = 0; i < previousTiles.length; i++) {
             previousTiles[i].letter.destroy();
             previousTiles[i].square.destroy();
@@ -190,9 +191,6 @@ function draw() {
         square.setInteractive();
         letterMap.set(square, letterBagTiles[i]);
         squareToTextBox.set(square, text);
-        if(i == 0) {
-            console.log('adding to squareToIndex with 0');
-        }
         squareToIndex.set(square, i);
         previousTiles.push({letter: text, square: square});
         square.on('pointerover', function (pointer) {
@@ -237,16 +235,13 @@ async function submitWord() {
         bonusImage.alpha = 0.9;
     }
     var deleteIndices = [];
-    console.log(currentSquares);
     for (i = 0; i < currentSquares.length; i++) {
-        if(squareToIndex.get(currentSquares[i])) {
-            console.log('hi');
+        if(squareToIndex.get(currentSquares[i]) != null) {
             deleteIndices.push(squareToIndex.get(currentSquares[i]));
         }
         squareToTextBox.get(currentSquares[i]).destroy();
         currentSquares[i].destroy();
     }
-    console.log(deleteIndices);
     deleteIndices.sort(function(a,b){ return a - b; });
     for (var i = deleteIndices.length -1; i >= 0; i--){
         letterBagTiles.splice(deleteIndices[i],1);
