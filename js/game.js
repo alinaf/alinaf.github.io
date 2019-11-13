@@ -222,7 +222,10 @@ async function submitWord() {
     for (i = 0; i < currentSquares.length; i++) {
         squareToTextBox.get(currentSquares[i]).destroy();
         currentSquares[i].destroy();
-        deleteIndices.push(squareToIndex.get(currentSquares[i]));
+        if(squareToIndex.get(currentSquares[i])) {
+            deleteIndices.push(squareToIndex.get(currentSquares[i]));
+        }
+        console.log(deleteIndices);
     }
   
     deleteIndices.sort(function(a,b){ return a - b; });
