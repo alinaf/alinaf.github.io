@@ -20,15 +20,12 @@ Game.print = function (data) {
 Game.setTileBag = function (data) {
     start.destroy();
     letterBag = data;
-    addTiles();
+    //addTiles();
 };
 
 Game.newTile = function () {
     drawTile(false);
-    console.log('hi sky')
 };
-
-
 
 // dimensions
 const w = window.innerWidth;
@@ -44,15 +41,15 @@ var letterMap = new Map();
 var squareToTextBox = new Map();
 var currentSquares = [];
 var squareToLocation = new Map();
+var squareToIndex = new Map();
+var letterBagTiles = new Array(); // array of letters
 
-var pos = 0; // no queue in JS apparently so just use this
+var pos = 0; // no queue in JS apparently so just use this, position in letterbag
 var plurals = new Set(); // doesn't actually work because each word needs its own memory
 // put "s" in (hacky), lots of complexities i'm skimming over
 const dictString = readTextFile("assets/words_alpha.txt").split(/\s+/);
 
 const validWords = new Set(dictString);
-
-console.log(validWords);
 
 var lpos = 200; // left current height
 var rpos = 200; // right current height
@@ -82,6 +79,7 @@ var bonusText;
 var instructions;
 var instructionsShowing = false;
 var start;
+var previousTiles = [];
 
 function preload() {
     this.load.image('square', 'assets/square.png');
@@ -117,7 +115,9 @@ function create() {
     scoreText.setOrigin(0.5);
     this.input.keyboard.on('keydown_ENTER', submitWord);
     this.input.keyboard.on('keydown_BACKSPACE', deleteLetter);
-    this.input.keyboard.on('keydown_SPACE', function () { return drawTile(true); });
+    this.input.keyboard.on('keydown_SPACE', function () {
+    drawTile(true); 
+});
     start = this.add.sprite(700, 300, 'submit');
     start.setInteractive();
     start.on('pointerup', function (pointer) {
@@ -140,22 +140,29 @@ function getTileBag() {
     return Phaser.Utils.Array.Shuffle(unshuffledLetterBag);
 }
 
-function addTiles() {
-    // make grid
+function draw() {
+    if(previousTiles.length != 0) {
+        for(i = 0; i < previousTiles.length; i++) {
+            previousTiles[i].letter.destroy();
+            previousTiles[i].square.destroy();
+        }
+        previousTiles = [];
+    }
+
     var width = 0;
-    for (i = 0; i < 15; i++) { // change this!!
+    for (i = 0; i < letterBagTiles.length; i++) {
         width += 85;
         const square = context.add.sprite(width, 75, 'tile');
         square.tint = 0xE6AC8E;
-        text = context.add.text(square.x - 18, square.y - 33, letterBag[i], {
+        text = context.add.text(square.x - 18, square.y - 33, letterBagTiles[i], {
             font: "60px Merriweather",
             fill: '#FFFFFF'
         });
         square.setInteractive();
-        text.visible = false;
-        square.visible = false;
-        letterMap.set(square, letterBag[i]);
+        letterMap.set(square, letterBagTiles[i]);
         squareToTextBox.set(square, text);
+        squareToIndex.set(square, i);
+        previousTiles.push({letter: text, square: square});
         square.on('pointerover', function (pointer) {
             this.setTint(0xE5381B);
         });
@@ -167,13 +174,10 @@ function addTiles() {
         });
         bagSquares.push(square);
     }
-    console.log('ahhh');
-    drawTile(true);
 }
 
 async function submitWord() {
     if (currentWord.length < 3) return;
-    console.log(currentWord);
     const errorMessage = validWord(currentWord);
     if (errorMessage != "") {
         camera.shake(700, 0.003);
@@ -205,11 +209,22 @@ async function submitWord() {
         bonusImage = context.add.sprite(700, 300, 'nice');
         bonusImage.alpha = 0.9;
     }
+    var deleteIndices = [];
     for (i = 0; i < currentSquares.length; i++) {
         squareToTextBox.get(currentSquares[i]).destroy();
         currentSquares[i].destroy();
+        deleteIndices.push(squareToIndex.get(currentSquares[i]));
     }
+  
+    deleteIndices.sort(function(a,b){ return a - b; });
+      console.log(deleteIndices);
+    console.log(letterBagTiles);
+    for (var i = deleteIndices.length -1; i >= 0; i--){
+        letterBagTiles.splice(deleteIndices[i],1);
+    }
+    console.log(letterBagTiles);
     currentSquares = [];
+    draw();
     if (bonusImage) {
         await sleep(1000);
         bonusImage.destroy();
@@ -260,9 +275,7 @@ function deleteLetter() {
     if (!currentWord.length) return;
     currentWord = currentWord.slice(0, -1);
     currentWordText.setText(currentWord);
-    console.log(currentSquares);
     currentSquares.pop();
-    console.log(currentSquares);
 }
 
 function updateString(square, letter) {
@@ -278,26 +291,28 @@ function updateString(square, letter) {
 }
 
 function drawTile(isSpacebar) {
-    if (instructionsShowing) instructions.destroy();
-    if (pos == letterBag.length) {
-        if (!showingMessage) {
-            const ranout = context.add.sprite(700, 300, 'ranout');
-            ranout.setInteractive();
-            showingMessage = true;
-            ranout.on('pointerup', function (pointer) {
-                this.destroy();
-                showingMessage = false;
-            });
-        }
-        return;
-    }
-    bagSquares[pos].visible = true;
-    squareToTextBox.get(bagSquares[pos]).visible = true;
+   // if (instructionsShowing) instructions.destroy();
+    // if (pos == letterBag.length) {
+    //     if (!showingMessage) {
+    //         const ranout = context.add.sprite(700, 300, 'ranout');
+    //         ranout.setInteractive();
+    //         showingMessage = true;
+    //         ranout.on('pointerup', function (pointer) {
+    //             this.destroy();
+    //             showingMessage = false;
+    //         });
+    //     }
+    //     return;
+    // }
+    //bagSquares[pos].visible = true;
+    // squareToTextBox.get(bagSquares[pos]).visible = true;
+    // pos++;
+    letterBagTiles.push(letterBag[pos]);
+    draw();
     pos++;
     if (isSpacebar) {
         Client.newTile();
     }
-    
 }
 
 // function canRearrange(word) {

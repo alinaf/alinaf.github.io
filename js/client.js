@@ -11,12 +11,10 @@ Client.askNewPlayer = function(){
 };
 
 Client.startGame = function(tileBag){
-    console.log(1);
     Client.socket.emit('start', tileBag);
 };
 
 Client.newTile = function () {
-    console.log('testing 750 pm')
     Client.socket.emit('newtile');
 };
 
@@ -29,7 +27,6 @@ Client.submitWord = function(word, score){
 };
 
 Client.socket.on('newtile', function() {
-    console.log('gonna make a new tile')
     Game.newTile();
 });
 

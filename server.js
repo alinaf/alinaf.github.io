@@ -41,7 +41,6 @@ io.on('connection',function(socket){
 
 
         socket.on('newtile', function () {
-            console.log('hello alina!');
             socket.broadcast.emit('newtile');
         });
 
