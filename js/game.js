@@ -11,9 +11,11 @@ Game.removePlayer = function (id) {
 };
 
 Game.print = function (data) {
-    var displayName = name ? name : "Player " + data.id;
+   // var displayName = name ? name : "Player " + data.id;
+   var displayName = "They";
     var points = data.score == 1 ? " point!" : " points!";
     bonusText.setText(displayName + " played " + data.word + " for " + data.score + points);
+    otherScoreText.setText("them: " + data.total);
     addWord(context, data.word, !p1);
     letterBagTiles = data.tiles;
     draw();
@@ -22,7 +24,8 @@ Game.print = function (data) {
 Game.setTileBag = function (data) {
     start.destroy();
     letterBag = data;
-    //addTiles();
+    line.visible = true; 
+    if(p1) drawTile(true);
 };
 
 Game.newTile = function () {
@@ -76,12 +79,14 @@ var currentWordText;
 var camera;
 var score = 0;
 var scoreText;
+var otherScoreText;
 var showingMessage = false;
 var bonusText;
 var instructions;
 var instructionsShowing = false;
 var start;
 var previousTiles = [];
+var line;
 
 function preload() {
     this.load.image('square', 'assets/square.png');
@@ -94,9 +99,9 @@ function preload() {
 }
 
 function create() {
-    // waste another hour on this line later please
-    var line = this.add.line(w / 2, h / 2 + 50, 0, 0, 0, 3 * h / 4, 0xE6AC8E);
+    line = this.add.line(w / 2, h / 2 + 50, 0, 0, 0, 3 * h / 4, 0xE6AC8E);
     line.setLineWidth(5);
+    line.visible = false; 
     bonusText = this.add.text(w / 2, 15, "", {
         font: "20px Karla",
         fill: '#000000'
@@ -107,20 +112,25 @@ function create() {
     camera = this.cameras.main;
     currentWordText = this.add.text(w / 2, h - 200, "", {
         font: "70px Merriweather",
-        fill: '#054f4a'
+        fill: '#142E28'
     });
     currentWordText.setOrigin(0.5);
-    scoreText = this.add.text(w / 2, h - 100, "score: 0", {
-        font: "55px Karla",
+    scoreText = this.add.text(w/4, h - 100, "you: 0", {
+        font: "40px Karla",
         fill: '#000000'
     });
-    scoreText.setOrigin(0.5);
+    otherScoreText = this.add.text(3*w/4, h - 100, "them: 0", {
+        font: "40px Karla",
+        fill: '#000000'
+    });
+    //scoreText.setOrigin(0.5);
     this.input.keyboard.on('keydown_ENTER', submitWord);
     this.input.keyboard.on('keydown_BACKSPACE', deleteLetter);
     this.input.keyboard.on('keydown_SPACE', function () {
     drawTile(true); 
 });
-    start = this.add.sprite(700, 300, 'submit');
+    start = this.add.sprite(w/2, h/2, 'submit');
+    start.setOrigin(0.5);
     start.setInteractive();
     start.on('pointerup', function (pointer) {
         Client.startGame(getTileBag())
@@ -219,7 +229,7 @@ async function submitWord() {
     for (var i = deleteIndices.length -1; i >= 0; i--){
         letterBagTiles.splice(deleteIndices[i],1);
     }
-    Client.submitWord(currentWord, bonus, letterBagTiles);
+    Client.submitWord(currentWord, bonus, letterBagTiles, score);
     currentWord = "";
     currentWordText.setText(currentWord);
     currentSquares = [];
