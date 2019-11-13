@@ -45,7 +45,7 @@ io.on('connection',function(socket){
         });
 
         socket.on('submit',function(data){
-            socket.broadcast.emit('print',{id: socket.player.id, word: data.word, score: data.score, tiles: data.tiles, total: data.total});
+            socket.broadcast.emit('print',{id: socket.player.id, word: data.word, score: data.score, tiles: data.tiles, total: data.total, dimensions: data.dimensions});
         });
 
         socket.on('disconnect',function(){

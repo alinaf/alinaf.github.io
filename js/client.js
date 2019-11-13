@@ -22,8 +22,8 @@ Client.sendClick = function(x,y){
   Client.socket.emit('click',{x:x,y:y});
 };
 
-Client.submitWord = function(word, score, letterBagTiles, total){
-  Client.socket.emit('submit',{word: word, score: score, tiles: letterBagTiles, total: total});
+Client.submitWord = function(word, score, letterBagTiles, total, dimensions){
+  Client.socket.emit('submit',{word: word, score: score, tiles: letterBagTiles, total: total, dimensions: dimensions});
 };
 
 Client.socket.on('newtile', function() {

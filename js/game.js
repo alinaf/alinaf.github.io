@@ -12,13 +12,21 @@ Game.removePlayer = function (id) {
 
 Game.print = function (data) {
    // var displayName = name ? name : "Player " + data.id;
-   var displayName = "They";
+    var displayName = "They";
     var points = data.score == 1 ? " point!" : " points!";
     bonusText.setText(displayName + " played " + data.word + " for " + data.score + points);
     otherScoreText.setText("them: " + data.total);
     addWord(context, data.word, !p1);
     letterBagTiles = data.tiles;
     draw();
+    if(data.dimensions) {
+        var arr = data.dimensions.left ? leftWords : rightWords;
+        var wordToDestroy = arr[data.dimensions.index];
+        for(i = 0; i < wordToDestroy.length; i++) {
+            wordToDestroy[i].square.destroy();
+            wordToDestroy[i].text.destroy();
+        }
+    }
 };
 
 Game.setTileBag = function (data) {
@@ -38,6 +46,11 @@ const h = window.innerHeight;
 // const topThird = h/3;
 
 var p1 = false;
+var leftWords = [];
+var leftWordCounter = 0;
+var rightWords = [];
+var rightWordCounter = 0;
+
 var letterBag;
 const brightBlue = "#459ac4";
 var currentWord = "";
@@ -206,10 +219,8 @@ async function submitWord() {
     var points = bonus == 1 ? " point!" : " points!";
     bonusText.setText("You played " + currentWord + " for " + bonus + points);
     scoreText.setText("score: " + score);
-    //const dimensions = canRearrange();
-    //
+    const dimensions = canRearrange();    
     addWord(context, currentWord, p1);
-    //}
     var bonusImage;
     if (bonus > 10) {
         bonusImage = context.add.sprite(700, 300, 'excellent');
@@ -225,14 +236,13 @@ async function submitWord() {
         if(squareToIndex.get(currentSquares[i])) {
             deleteIndices.push(squareToIndex.get(currentSquares[i]));
         }
-        console.log(deleteIndices);
     }
   
     deleteIndices.sort(function(a,b){ return a - b; });
     for (var i = deleteIndices.length -1; i >= 0; i--){
         letterBagTiles.splice(deleteIndices[i],1);
     }
-    Client.submitWord(currentWord, bonus, letterBagTiles, score);
+    Client.submitWord(currentWord, bonus, letterBagTiles, score, dimensions);
     currentWord = "";
     currentWordText.setText(currentWord);
     currentSquares = [];
@@ -327,60 +337,32 @@ function drawTile(isSpacebar) {
     }
 }
 
-// function canRearrange(word) {
-// 	for (i = 0; i < currentSquares.length; i++) {
-// 		if (squareToLocation.has(currentSquares[i])) {
-// 			const loc = squareToLocation.get(currentSquares[i]);
-// 			return {
-// 				width: loc.width,
-// 				height: loc.height
-// 			};
-// 		}
-// 	}
-// 	return false;
-// }
-
-// function rearrange(context, word, width, height) {
-// 	const startWidth = width;
-// 	for (i = 0; i < word.length; i++) {
-// 		width += 75;
-
-// 		const square = context.add.sprite(width, height, 'square');
-// 		squareToLocation.set(square, {
-// 			height: currHeight,
-// 			width: startWidth,
-// 			length: word.length
-// 		});
-// 		square.tint = 0xE6AC8E;
-// 		square.on('pointerover', function(pointer) {
-// 			this.setTint(0xE5381B);
-// 		});
-// 		square.on('pointerout', function(pointer) {
-// 			this.setTint(0xE6AC8E);
-// 		});
-// 		square.on('pointerup', function(pointer) {
-// 			updateString(this, letterMap.get(this));
-// 		});
-// 		text = context.add.text(square.x - 18, square.y - 33, word[i], {
-// 			font: "50px Merriweather",
-// 			fill: '#FFFFFF'
-// 		});
-// 		square.setInteractive();
-// 		letterMap.set(square, word[i]);
-// 		squareToTextBox.set(square, text);
-// 	}
-// }
+function canRearrange(word) {
+	for (i = 0; i < currentSquares.length; i++) {
+		if (squareToLocation.has(currentSquares[i])) {
+			const loc = squareToLocation.get(currentSquares[i]);
+			return {
+				left: loc.left,
+				index: loc.index,
+                length: loc.length
+			};
+		}
+	}
+	return false;
+}
 
 function addWord(context, word, left) {
     var width = left ? 0 : w / 2;
     var currHeight = left ? lpos : rpos;
     const startWidth = width;
+    var squares = [];
+    var index = left ? leftWordCounter : rightWordCounter;
     for (i = 0; i < word.length; i++) {
         width += 75;
         const square = context.add.sprite(width, currHeight, 'square');
         squareToLocation.set(square, {
-            height: currHeight,
-            width: startWidth,
+            left: left,
+            index: index,
             length: word.length
         });
         square.tint = 0xE6AC8E;
@@ -400,9 +382,18 @@ function addWord(context, word, left) {
         square.setInteractive();
         letterMap.set(square, word[i]);
         squareToTextBox.set(square, text);
+        squares.push({square: square, text: text});
     }
-    if (left) lpos += 85;
-    if (!left) rpos += 85;
+    if (left) {
+        lpos += 85;
+        leftWords[leftWordCounter] = squares;
+        leftWordCounter++;
+    }
+    else {
+        rpos += 85;
+        rightWords[rightWordCounter] = squares;
+        rightWordCounter++;
+    }
 }
 
 function calculateScore(word) {
