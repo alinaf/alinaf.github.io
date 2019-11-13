@@ -34,6 +34,18 @@ Game.setTileBag = function (data) {
     letterBag = data;
     line.visible = true; 
     if(p1) drawTile(true);
+    var youWidth = p1 ? w/4 : 3*w/4;
+    var themWidth = p1 ? 3*w/4 : w/4;
+
+
+    scoreText = context.add.text(youWidth, h - 100, "you: 0", {
+        font: "40px Karla",
+        fill: '#000000'
+    });
+    otherScoreText = context.add.text(themWidth, h - 100, "them: 0", {
+        font: "40px Karla",
+        fill: '#000000'
+    });
 };
 
 Game.newTile = function () {
@@ -128,15 +140,7 @@ function create() {
         fill: '#142E28'
     });
     currentWordText.setOrigin(0.5);
-    scoreText = this.add.text(w/4, h - 100, "you: 0", {
-        font: "40px Karla",
-        fill: '#000000'
-    });
-    otherScoreText = this.add.text(3*w/4, h - 100, "them: 0", {
-        font: "40px Karla",
-        fill: '#000000'
-    });
-    //scoreText.setOrigin(0.5);
+
     this.input.keyboard.on('keydown_ENTER', submitWord);
     this.input.keyboard.on('keydown_BACKSPACE', deleteLetter);
     this.input.keyboard.on('keydown_SPACE', function () {
@@ -186,6 +190,9 @@ function draw() {
         square.setInteractive();
         letterMap.set(square, letterBagTiles[i]);
         squareToTextBox.set(square, text);
+        if(i == 0) {
+            console.log('adding to squareToIndex with 0');
+        }
         squareToIndex.set(square, i);
         previousTiles.push({letter: text, square: square});
         square.on('pointerover', function (pointer) {
@@ -230,14 +237,16 @@ async function submitWord() {
         bonusImage.alpha = 0.9;
     }
     var deleteIndices = [];
+    console.log(currentSquares);
     for (i = 0; i < currentSquares.length; i++) {
-        squareToTextBox.get(currentSquares[i]).destroy();
-        currentSquares[i].destroy();
         if(squareToIndex.get(currentSquares[i])) {
+            console.log('hi');
             deleteIndices.push(squareToIndex.get(currentSquares[i]));
         }
+        squareToTextBox.get(currentSquares[i]).destroy();
+        currentSquares[i].destroy();
     }
-  
+    console.log(deleteIndices);
     deleteIndices.sort(function(a,b){ return a - b; });
     for (var i = deleteIndices.length -1; i >= 0; i--){
         letterBagTiles.splice(deleteIndices[i],1);
