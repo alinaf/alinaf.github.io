@@ -197,9 +197,12 @@ function draw() {
             this.setTint(0xE5381B);
         });
         square.on('pointerout', function (pointer) {
-            this.setTint(0xE6AC8E);
+            if(!currentSquares.includes(this)) {
+                this.setTint(0xE6AC8E);
+            }
         });
         square.on('pointerup', function (pointer) {
+            this.setTint(0xE5381B);
             updateString(this, letterMap.get(this));
         });
         bagSquares.push(square);
@@ -301,6 +304,7 @@ function deleteLetter() {
     if (!currentWord.length) return;
     currentWord = currentWord.slice(0, -1);
     currentWordText.setText(currentWord);
+    currentSquares[currentSquares.length-1].setTint(0xE6AC8E);
     currentSquares.pop();
 }
 
@@ -370,13 +374,16 @@ function addWord(context, word, left) {
             length: word.length
         });
         square.tint = 0xE6AC8E;
-        square.on('pointerover', function (pointer) {
+          square.on('pointerover', function (pointer) {
             this.setTint(0xE5381B);
         });
         square.on('pointerout', function (pointer) {
-            this.setTint(0xE6AC8E);
+            if(!currentSquares.includes(this)) {
+                this.setTint(0xE6AC8E);
+            }
         });
         square.on('pointerup', function (pointer) {
+            this.setTint(0xE5381B);
             updateString(this, letterMap.get(this));
         });
         text = context.add.text(square.x - 18, square.y - 33, word[i], {
