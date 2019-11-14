@@ -181,11 +181,11 @@ function draw() {
 
     var width = 0;
     for (i = 0; i < letterBagTiles.length; i++) {
-        width += 85;
-        const square = context.add.sprite(width, 75, 'tile');
+        width += 105;
+        const square = context.add.sprite(width, 85, 'tile');
         square.tint = 0xE6AC8E;
         text = context.add.text(square.x - 18, square.y - 33, letterBagTiles[i], {
-            font: "60px Merriweather",
+            font: "70px Merriweather",
             fill: '#FFFFFF'
         });
         square.setInteractive();
@@ -210,7 +210,7 @@ function draw() {
 }
 
 async function submitWord() {
-    if (currentWord.length < 3) return;
+    if (currentWord.length < 4) return;
     const errorMessage = validWord(currentWord);
     if (errorMessage != "") {
         camera.shake(700, 0.003);
@@ -408,9 +408,6 @@ function addWord(context, word, left) {
 }
 
 function calculateScore(word) {
-    if (word.length == 3) {
-        return 1;
-    }
     if (word.length < 7) return word.length;
     return word.length * 2;
 }
