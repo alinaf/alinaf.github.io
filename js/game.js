@@ -66,7 +66,6 @@ var rightWordCounter = 0;
 var letterBag;
 const brightBlue = "#459ac4";
 var currentWord = "";
-var wordStrings = [];
 var letterMap = new Map();
 var squareToTextBox = new Map();
 var currentSquares = [];
@@ -81,8 +80,8 @@ const dictString = readTextFile("assets/words_alpha.txt").split(/\s+/);
 
 const validWords = new Set(dictString);
 
-var lpos = 200; // left current height
-var rpos = 200; // right current height
+var lpos = 225; // left current height
+var rpos = 225; // right current height
 var left = true;
 var config = {
     type: Phaser.WEBGL,
@@ -112,6 +111,7 @@ var instructionsShowing = false;
 var start;
 var previousTiles = [];
 var line;
+var divider;
 
 function preload() {
     this.load.image('square', 'assets/square.png');
@@ -127,6 +127,9 @@ function create() {
     line = this.add.line(w / 2, h / 2 + 50, 0, 0, 0, 3 * h / 4, 0xE6AC8E);
     line.setLineWidth(5);
     line.visible = false; 
+     line = this.add.line(w/2, 165, 0, 0, w, 0, 0xE6AC8E);
+    line.setLineWidth(5);
+    //line.visible = false; 
     bonusText = this.add.text(w / 2, 15, "", {
         font: "20px Karla",
         fill: '#000000'
