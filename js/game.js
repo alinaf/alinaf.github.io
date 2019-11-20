@@ -4,23 +4,24 @@ var name = "";
 var gameStarted = false;
 const max = 32;
 
-Game.addNewPlayer = function(id, x, y) {
+Game.addNewPlayer = function (id, x, y) {
     console.log('add player')
 };
 
-Game.removePlayer = function(id) {
+Game.removePlayer = function (id) {
     console.log('remove');
 };
 
-Game.startTimer = function() {
+Game.startTimer = function () {
     gameStarted = true;
 };
 
-Game.print = function(data) {
+Game.print = function (data) {
     // var displayName = name ? name : "Player " + data.id;
     var displayName = "They";
     var points = data.score == 1 ? " point!" : " points!";
     theirScore += data.score;
+
     if(theirScore >= max) {
         gameOver(false);
         return;
@@ -65,14 +66,20 @@ Game.print = function(data) {
     }
 };
 
-Game.setTileBag = function(data) {
+Game.setTileBag = function (data) {
     divider.visible = true;
     line.visible = true;
 
     start.destroy();
     letterBag = data;
     line.visible = true;
-    if (p1) drawTile(true);
+    if (p1) {
+        drawTile(true);
+        drawTile(true);
+        drawTile(true);
+        drawTile(true);
+        drawTile(true);
+    }
     var youWidth = p1 ? w / 4 : 3 * w / 4;
     var themWidth = p1 ? 3 * w / 4 : w / 4;
 
@@ -86,7 +93,7 @@ Game.setTileBag = function(data) {
     });
 };
 
-Game.newTile = function() {
+Game.newTile = function () {
     drawTile(false);
 };
 
@@ -164,6 +171,7 @@ var leftGraphics;
 var rightGraphics;
 
 function gameOver(win) {
+
     if(win) {
         console.log('You win!');
     }
@@ -184,7 +192,7 @@ function preload() {
 
 function create() {
     leftScore = new Phaser.Geom.Rectangle(0, h, w / 2, 0);
-    rightScore = new Phaser.Geom.Rectangle(w / 2, h, w, h/2);
+    rightScore = new Phaser.Geom.Rectangle(w / 2, h, w, h / 2);
     leftGraphics = this.add.graphics({
         fillStyle: {
             color: 0xFEEDE8
@@ -235,13 +243,13 @@ function create() {
 
     this.input.keyboard.on('keydown_ENTER', submitWord);
     this.input.keyboard.on('keydown_BACKSPACE', deleteLetter);
-    this.input.keyboard.on('keydown_SPACE', function() {
+    /*this.input.keyboard.on('keydown_SPACE', function () {
         drawTile(true);
-    });
+    });*/
     start = this.add.sprite(w / 2, h / 2, 'submit');
     start.setOrigin(0.5);
     start.setInteractive();
-    start.on('pointerup', function(pointer) {
+    start.on('pointerup', function (pointer) {
         Client.startGame(getTileBag())
         p1 = true; // started game
         //hostCreateNewGame();
@@ -263,9 +271,15 @@ function formatTime(seconds) {
 }
 
 function onEvent() {
-    if (p1 || gameStarted) {
+    if ((p1 || gameStarted) && this.initialTime > 0) {
         this.initialTime -= 1; // One second
         timerText.setText('Timer: ' + formatTime(this.initialTime));
+        if (this.initialTime % 3 == 0) {
+            drawTile(true);
+        }
+    }
+    if (this.initialTime == 0) {
+        console.log("Game over!");
     }
 }
 
@@ -320,15 +334,15 @@ function draw() {
             letter: text,
             square: square
         });
-        square.on('pointerover', function(pointer) {
+        square.on('pointerover', function (pointer) {
             this.setTint(0xE5381B);
         });
-        square.on('pointerout', function(pointer) {
+        square.on('pointerout', function (pointer) {
             if (!currentSquares.includes(this)) {
                 this.setTint(0xE6AC8E);
             }
         });
-        square.on('pointerup', function(pointer) {
+        square.on('pointerup', function (pointer) {
             this.setTint(0xE5381B);
             updateString(this, letterMap.get(this));
         });
@@ -386,7 +400,7 @@ async function submitWord() {
         squareToTextBox.get(currentSquares[i]).destroy();
         currentSquares[i].destroy();
     }
-    deleteIndices.sort(function(a, b) {
+    deleteIndices.sort(function (a, b) {
         return a - b;
     });
     for (var i = deleteIndices.length - 1; i >= 0; i--) {
@@ -419,6 +433,7 @@ async function submitWord() {
         await sleep(1000);
         bonusImage.destroy();
     }
+
     if(score >= max) {
         gameOver(true);
     }
@@ -428,7 +443,7 @@ function readTextFile(file) {
     var rawFile = new XMLHttpRequest();
     var allText;
     rawFile.open("GET", file, false);
-    rawFile.onreadystatechange = function() {
+    rawFile.onreadystatechange = function () {
         allText = rawFile.responseText;
     }
     rawFile.send(null);
@@ -551,15 +566,15 @@ function addWord(context, word, left) {
             length: word.length
         });
         square.tint = 0xE6AC8E;
-        square.on('pointerover', function(pointer) {
+        square.on('pointerover', function (pointer) {
             this.setTint(0xE5381B);
         });
-        square.on('pointerout', function(pointer) {
+        square.on('pointerout', function (pointer) {
             if (!currentSquares.includes(this)) {
                 this.setTint(0xE6AC8E);
             }
         });
-        square.on('pointerup', function(pointer) {
+        square.on('pointerup', function (pointer) {
             this.setTint(0xE5381B);
             updateString(this, letterMap.get(this));
         });
@@ -597,7 +612,7 @@ WebFontConfig = {
     }
 };
 
-(function() {
+(function () {
     var wf = document.createElement('script');
     wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
         '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
