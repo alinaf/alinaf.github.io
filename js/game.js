@@ -108,6 +108,8 @@ var leftWordCounter = 0;
 var rightWords = [];
 var rightWordCounter = 0;
 
+var lastWidth = 0;
+
 var letterBag;
 const brightBlue = "#459ac4";
 var currentWord = "";
@@ -308,6 +310,7 @@ function getTileBag() {
 }
 
 function draw() {
+    console.log('draw');
     if (previousTiles.length != 0) {
         // delete from map
         for (i = 0; i < previousTiles.length; i++) {
@@ -317,9 +320,12 @@ function draw() {
         previousTiles = [];
     }
 
+    pos = 0;
     var width = 0;
     for (i = 0; i < letterBagTiles.length; i++) {
+        pos = i;
         width += 105;
+        lastWidth = width;
         const square = context.add.sprite(width, 85, 'tile');
         square.tint = 0xE6AC8E;
         text = context.add.text(square.x - 18, square.y - 33, letterBagTiles[i], {
@@ -348,6 +354,45 @@ function draw() {
         });
         bagSquares.push(square);
     }
+}
+
+function addTile() {
+        width = lastWidth + 105;
+        const square = context.add.sprite(width, 85, 'tile');
+        square.tint = 0xE6AC8E;
+        // console.log('tiles');
+        // console.log(letterBagTiles);
+        // console.log('pos');
+
+        // console.log(pos);
+        //                 console.log('bag pos');
+
+        //console.log(letterBagTiles[pos]);
+        text = context.add.text(square.x - 18, square.y - 33, letterBagTiles[pos], {
+            font: "70px Merriweather",
+            fill: '#FFFFFF'
+        });
+        square.setInteractive();
+        letterMap.set(square, letterBagTiles[pos]);
+        squareToTextBox.set(square, text);
+        squareToIndex.set(square, pos);
+        previousTiles.push({
+            letter: text,
+            square: square
+        });
+        square.on('pointerover', function (pointer) {
+            this.setTint(0xE5381B);
+        });
+        square.on('pointerout', function (pointer) {
+            if (!currentSquares.includes(this)) {
+                this.setTint(0xE6AC8E);
+            }
+        });
+        square.on('pointerup', function (pointer) {
+            this.setTint(0xE5381B);
+            updateString(this, letterMap.get(this));
+        });
+    lastWidth += 105;
 }
 
 async function submitWord() {
@@ -409,7 +454,6 @@ async function submitWord() {
     if (dimensions) {
         if (dimensions.stolen) {
             theirScore -= dimensions.length;
-            console.log(theirScore);
             if (p1) {
                 // change right
                 rightGraphics.clear();
@@ -520,7 +564,7 @@ function drawTile(isSpacebar) {
     // squareToTextBox.get(bagSquares[pos]).visible = true;
     // pos++;
     letterBagTiles.push(letterBag[pos]);
-    draw();
+    addTile();
     pos++;
     if (isSpacebar) {
         Client.newTile();
