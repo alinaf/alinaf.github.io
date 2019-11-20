@@ -41,13 +41,15 @@ Game.print = function (data) {
 };
 
 Game.setTileBag = function (data) {
+    divider.visible = true;
+    line.visible = true;
+
     start.destroy();
     letterBag = data;
     line.visible = true;
     if (p1) drawTile(true);
     var youWidth = p1 ? w / 4 : 3 * w / 4;
     var themWidth = p1 ? 3 * w / 4 : w / 4;
-
 
     scoreText = context.add.text(youWidth, h - 100, "you: 0", {
         font: "40px Karla",
@@ -153,9 +155,9 @@ function create() {
     line = this.add.line(w / 2, h / 2 + 50, 0, 0, 0, 3 * h / 4, 0xE6AC8E);
     line.setLineWidth(5);
     line.visible = false;
-    line = this.add.line(w / 2, 165, 0, 0, w, 0, 0xE6AC8E);
-    line.setLineWidth(5);
-    //line.visible = false; 
+    divider = this.add.line(w / 2, 165, 0, 0, w, 0, 0xE6AC8E);
+    divider.setLineWidth(5);
+    divider.visible = false; 
     bonusText = this.add.text(w / 2, 15, "", {
         font: "20px Karla",
         fill: '#000000'
@@ -180,12 +182,12 @@ function create() {
     start.setInteractive();
     start.on('pointerup', function (pointer) {
         Client.startGame(getTileBag())
-
         p1 = true; // started game
         //hostCreateNewGame();
         this.destroy();
+        divider.visible = true;
+        line.visible = true;
     });
-
 }
 
 function formatTime(seconds) {
@@ -204,7 +206,6 @@ function onEvent() {
         this.initialTime -= 1; // One second
         timerText.setText('Timer: ' + formatTime(this.initialTime));
     }
-    
 }
 
 // function hostCreateNewGame() {
@@ -272,7 +273,7 @@ function draw() {
 }
 
 async function submitWord() {
-    //if (currentWord.length < 4) return;
+    if (currentWord.length < 4) return;
     const errorMessage = validWord(currentWord);
     if (errorMessage != "") {
         camera.shake(700, 0.003);
@@ -292,7 +293,7 @@ async function submitWord() {
     score += bonus;
     var points = bonus == 1 ? " point!" : " points!";
     bonusText.setText("You played " + currentWord + " for " + bonus + points);
-    scoreText.setText("score: " + score);
+    scoreText.setText("you: " + score);
     const dimensions = canRearrange();
     addWord(context, currentWord, p1);
     var bonusImage;
