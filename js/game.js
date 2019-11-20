@@ -48,12 +48,12 @@ Game.print = function(data) {
             if (p1) {
                 // change left
                 leftGraphics.clear();
-                leftScore = new Phaser.Geom.Rectangle(w / 2, h, w, -1 * (score / 32 * h));
+                leftScore = new Phaser.Geom.Rectangle(0, h, w / 2, -1 * (score / 32 * h));
                 leftGraphics.fillRectShape(leftScore);
             } else {
                 // change right
                 rightGraphics.clear();
-                rightScore = new Phaser.Geom.Rectangle(0, h, w / 2, -1 * (score / 32 * h));
+                rightScore = new Phaser.Geom.Rectangle(w / 2, h, w, -1 * (score / 32 * h));
                 rightGraphics.fillRectShape(rightScore);
             }
         }
