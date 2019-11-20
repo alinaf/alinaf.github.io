@@ -2,6 +2,7 @@ const playerMap = {};
 var Game = {};
 var name = "";
 var gameStarted = false;
+const max = 32;
 
 Game.addNewPlayer = function (id, x, y) {
     console.log('add player')
@@ -20,6 +21,10 @@ Game.print = function (data) {
     var displayName = "They";
     var points = data.score == 1 ? " point!" : " points!";
     theirScore += data.score;
+    if (theirScore >= max) {
+        gameOver(false);
+        return;
+    }
     if (p1) {
         // change right
         rightScore = new Phaser.Geom.Rectangle(w / 2, h, w, -1 * (theirScore / 32 * h));
@@ -158,6 +163,15 @@ var rightScore;
 var leftGraphics;
 var rightGraphics;
 
+function gameOver(win) {
+    if (win) {
+        console.log('You win!');
+    }
+    else {
+        console.log('You lose!');
+    }
+}
+
 function preload() {
     this.load.image('square', 'assets/square.png');
     this.load.image('tile', 'assets/tile.png');
@@ -251,10 +265,9 @@ function formatTime(seconds) {
 function onEvent() {
     if (p1 || gameStarted) {
         this.initialTime -= 1; // One second
-        console.log(this.initialTime);
         timerText.setText('Timer: ' + formatTime(this.initialTime));
         if (this.initialTime % 5 == 0) {
-            drawTile();
+            drawTile(true);
         }
     }
 }
@@ -408,6 +421,9 @@ async function submitWord() {
     if (bonusImage) {
         await sleep(1000);
         bonusImage.destroy();
+    }
+    if (score >= max) {
+        gameOver(true);
     }
 }
 
