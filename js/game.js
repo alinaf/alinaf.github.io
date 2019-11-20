@@ -17,9 +17,9 @@ Game.startTimer = function () {
 
 Game.print = function (data) {
     // var displayName = name ? name : "Player " + data.id;
-
     var displayName = "They";
     var points = data.score == 1 ? " point!" : " points!";
+    theirScore = data.score;
     bonusText.setText(displayName + " played " + data.word + " for " + data.score + points);
     otherScoreText.setText("them: " + data.total);
     madeWords.add(data.word);
@@ -32,6 +32,10 @@ Game.print = function (data) {
         for (i = 0; i < wordToDestroy.length; i++) {
             wordToDestroy[i].square.destroy();
             wordToDestroy[i].text.destroy();
+        }
+        if(data.dimensions.stolen) {
+            score -= 10;
+            scoreText.setText("you: " + score);
         }
     }
 };
@@ -114,6 +118,7 @@ var bagSquares = [];
 var currentWordText;
 var camera;
 var score = 0;
+var theirScore = 0;
 var scoreText;
 var otherScoreText;
 var showingMessage = false;
@@ -136,13 +141,12 @@ function preload() {
 }
 
 function create() {
-
     this.initialTime = 150;
     timerText = this.add.text(w / 2, h - 50, 'Timer: ' + formatTime(this.initialTime), {
         font: "20px Karla",
         fill: '#142E28'
     });
-    
+
     // Each 1000 ms call onEvent
     timedEvent = this.time.addEvent({ delay: 1000, callback: onEvent, callbackScope: this, loop: true });
 
@@ -311,6 +315,11 @@ async function submitWord() {
     for (var i = deleteIndices.length - 1; i >= 0; i--) {
         letterBagTiles.splice(deleteIndices[i], 1);
     }
+    if (dimensions) {
+       if(dimensions.stolen) {
+        otherScoreText.setText("them: " + (theirScore - 10));
+       }
+    }
     Client.submitWord(currentWord, bonus, letterBagTiles, score, dimensions);
     currentWord = "";
     currentWordText.setText(currentWord);
@@ -411,17 +420,27 @@ function drawTile(isSpacebar) {
 }
 
 function canRearrange(word) {
+    var stolen = false;
     for (i = 0; i < currentSquares.length; i++) {
         if (squareToLocation.has(currentSquares[i])) {
             const loc = squareToLocation.get(currentSquares[i]);
+            if(loc.left && !p1) {
+                // stole a left word
+                stolen = true;
+            }
+            if(!loc.left && p1) {
+                // stole a right word
+                stolen = true;
+            }
             return {
                 left: loc.left,
                 index: loc.index,
-                length: loc.length
+                length: loc.length,
+                stolen: stolen
             };
         }
     }
-    return false;
+return false;
 }
 
 function addWord(context, word, left) {
@@ -486,7 +505,7 @@ WebFontConfig = {
 (function () {
     var wf = document.createElement('script');
     wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
-        '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
     wf.type = 'text/javascript';
     wf.async = 'true';
     var s = document.getElementsByTagName('script')[0];
