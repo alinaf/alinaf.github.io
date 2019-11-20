@@ -19,7 +19,7 @@ Game.print = function (data) {
     // var displayName = name ? name : "Player " + data.id;
     var displayName = "They";
     var points = data.score == 1 ? " point!" : " points!";
-    theirScore = data.score;
+    theirScore += data.score;
     bonusText.setText(displayName + " played " + data.word + " for " + data.score + points);
     otherScoreText.setText("them: " + data.total);
     madeWords.add(data.word);
@@ -34,7 +34,7 @@ Game.print = function (data) {
             wordToDestroy[i].text.destroy();
         }
         if(data.dimensions.stolen) {
-            score -= 10;
+            score -= data.dimensions.length;
             scoreText.setText("you: " + score);
         }
     }
@@ -272,7 +272,7 @@ function draw() {
 }
 
 async function submitWord() {
-    if (currentWord.length < 4) return;
+    //if (currentWord.length < 4) return;
     const errorMessage = validWord(currentWord);
     if (errorMessage != "") {
         camera.shake(700, 0.003);
@@ -317,7 +317,7 @@ async function submitWord() {
     }
     if (dimensions) {
        if(dimensions.stolen) {
-        otherScoreText.setText("them: " + (theirScore - 10));
+        otherScoreText.setText("them: " + (theirScore - dimensions.length));
        }
     }
     Client.submitWord(currentWord, bonus, letterBagTiles, score, dimensions);
