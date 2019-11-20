@@ -3,23 +3,32 @@ var Game = {};
 var name = "";
 var gameStarted = false;
 
-Game.addNewPlayer = function (id, x, y) {
+Game.addNewPlayer = function(id, x, y) {
     console.log('add player')
 };
 
-Game.removePlayer = function (id) {
+Game.removePlayer = function(id) {
     console.log('remove');
 };
 
-Game.startTimer = function () {
+Game.startTimer = function() {
     gameStarted = true;
 };
 
-Game.print = function (data) {
+Game.print = function(data) {
     // var displayName = name ? name : "Player " + data.id;
     var displayName = "They";
     var points = data.score == 1 ? " point!" : " points!";
     theirScore += data.score;
+    if (p1) {
+        // change right
+        rightScore = new Phaser.Geom.Rectangle(w / 2, h, w, -1 * (theirScore / 32 * h));
+        rightGraphics.fillRectShape(rightScore);
+    } else {
+        // change left
+        leftScore = new Phaser.Geom.Rectangle(0, h, w / 2, -1 * (theirScore / 32 * h));
+        leftGraphics.fillRectShape(leftScore);
+    }
     bonusText.setText(displayName + " played " + data.word + " for " + data.score + points);
     otherScoreText.setText("them: " + data.total);
     madeWords.add(data.word);
@@ -33,14 +42,25 @@ Game.print = function (data) {
             wordToDestroy[i].square.destroy();
             wordToDestroy[i].text.destroy();
         }
-        if(data.dimensions.stolen) {
+        if (data.dimensions.stolen) {
             score -= data.dimensions.length;
             scoreText.setText("you: " + score);
+            if (p1) {
+                // change left
+                leftGraphics.clear();
+                leftScore = new Phaser.Geom.Rectangle(w / 2, h, w, -1 * (score / 32 * h));
+                leftGraphics.fillRectShape(leftScore);
+            } else {
+                // change right
+                rightGraphics.clear();
+                rightScore = new Phaser.Geom.Rectangle(0, h, w / 2, -1 * (score / 32 * h));
+                rightGraphics.fillRectShape(rightScore);
+            }
         }
     }
 };
 
-Game.setTileBag = function (data) {
+Game.setTileBag = function(data) {
     divider.visible = true;
     line.visible = true;
 
@@ -61,7 +81,7 @@ Game.setTileBag = function (data) {
     });
 };
 
-Game.newTile = function () {
+Game.newTile = function() {
     drawTile(false);
 };
 
@@ -102,7 +122,7 @@ var config = {
     width: window.innerWidth - 20,
     height: window.innerHeight - 20,
     parent: 'game',
-    backgroundColor: "#FEEDE8",
+    backgroundColor: "#ffffff",
     scene: {
         preload: preload,
         create: create,
@@ -129,8 +149,14 @@ var instructions;
 var instructionsShowing = false;
 var start;
 var previousTiles = [];
+
+// borders
 var line;
 var divider;
+var leftScore;
+var rightScore;
+var leftGraphics;
+var rightGraphics;
 
 function preload() {
     this.load.image('square', 'assets/square.png');
@@ -143,21 +169,42 @@ function preload() {
 }
 
 function create() {
+    leftScore = new Phaser.Geom.Rectangle(0, h, w / 2, 0);
+    rightScore = new Phaser.Geom.Rectangle(w / 2, h, w, h/2);
+    leftGraphics = this.add.graphics({
+        fillStyle: {
+            color: 0xFEEDE8
+        }
+    });
+    rightGraphics = this.add.graphics({
+        fillStyle: {
+            color: 0xFEEDE8
+        }
+    });
+    leftGraphics.fillRectShape(leftScore);
+    rightGraphics.fillRectShape(rightScore);
+
+    line = this.add.line(w / 2, h / 2 + 50, 0, 0, 0, 3 * h / 4, 0xE6AC8E);
+    line.setLineWidth(3);
+    line.visible = false;
+    divider = this.add.line(w / 2, 165, 0, 0, w, 0, 0xE6AC8E);
+    divider.setLineWidth(3);
+    divider.visible = false;
+
     this.initialTime = 150;
     timerText = this.add.text(w / 2, h - 50, 'Timer: ' + formatTime(this.initialTime), {
         font: "20px Karla",
         fill: '#142E28'
     });
-
+    timerText.setOrigin(0.5);
     // Each 1000 ms call onEvent
-    timedEvent = this.time.addEvent({ delay: 1000, callback: onEvent, callbackScope: this, loop: true });
+    timedEvent = this.time.addEvent({
+        delay: 1000,
+        callback: onEvent,
+        callbackScope: this,
+        loop: true
+    });
 
-    line = this.add.line(w / 2, h / 2 + 50, 0, 0, 0, 3 * h / 4, 0xE6AC8E);
-    line.setLineWidth(5);
-    line.visible = false;
-    divider = this.add.line(w / 2, 165, 0, 0, w, 0, 0xE6AC8E);
-    divider.setLineWidth(5);
-    divider.visible = false; 
     bonusText = this.add.text(w / 2, 15, "", {
         font: "20px Karla",
         fill: '#000000'
@@ -174,13 +221,13 @@ function create() {
 
     this.input.keyboard.on('keydown_ENTER', submitWord);
     this.input.keyboard.on('keydown_BACKSPACE', deleteLetter);
-    this.input.keyboard.on('keydown_SPACE', function () {
+    this.input.keyboard.on('keydown_SPACE', function() {
         drawTile(true);
     });
     start = this.add.sprite(w / 2, h / 2, 'submit');
     start.setOrigin(0.5);
     start.setInteractive();
-    start.on('pointerup', function (pointer) {
+    start.on('pointerup', function(pointer) {
         Client.startGame(getTileBag())
         p1 = true; // started game
         //hostCreateNewGame();
@@ -255,16 +302,19 @@ function draw() {
         letterMap.set(square, letterBagTiles[i]);
         squareToTextBox.set(square, text);
         squareToIndex.set(square, i);
-        previousTiles.push({ letter: text, square: square });
-        square.on('pointerover', function (pointer) {
+        previousTiles.push({
+            letter: text,
+            square: square
+        });
+        square.on('pointerover', function(pointer) {
             this.setTint(0xE5381B);
         });
-        square.on('pointerout', function (pointer) {
+        square.on('pointerout', function(pointer) {
             if (!currentSquares.includes(this)) {
                 this.setTint(0xE6AC8E);
             }
         });
-        square.on('pointerup', function (pointer) {
+        square.on('pointerup', function(pointer) {
             this.setTint(0xE5381B);
             updateString(this, letterMap.get(this));
         });
@@ -277,7 +327,7 @@ async function submitWord() {
     const errorMessage = validWord(currentWord);
     if (errorMessage != "") {
         camera.shake(700, 0.003);
-        for(square in currentSquares) {
+        for (square in currentSquares) {
             currentSquares[square].setTint(0xE6AC8E);
         }
         currentSquares = [];
@@ -291,6 +341,16 @@ async function submitWord() {
     plurals.add(currentWord + "s");
     var bonus = calculateScore(currentWord);
     score += bonus;
+    if (p1) {
+        // change left
+        leftScore = new Phaser.Geom.Rectangle(0, h, w / 2, -1 * (score / 32 * h));
+        leftGraphics.fillRectShape(leftScore);
+
+    } else {
+        // change right
+        rightScore = new Phaser.Geom.Rectangle(w / 2, h, w, -1 * (score / 32 * h));
+        rightGraphics.fillRectShape(rightScore);
+    }
     var points = bonus == 1 ? " point!" : " points!";
     bonusText.setText("You played " + currentWord + " for " + bonus + points);
     scoreText.setText("you: " + score);
@@ -312,14 +372,29 @@ async function submitWord() {
         squareToTextBox.get(currentSquares[i]).destroy();
         currentSquares[i].destroy();
     }
-    deleteIndices.sort(function (a, b) { return a - b; });
+    deleteIndices.sort(function(a, b) {
+        return a - b;
+    });
     for (var i = deleteIndices.length - 1; i >= 0; i--) {
         letterBagTiles.splice(deleteIndices[i], 1);
     }
     if (dimensions) {
-       if(dimensions.stolen) {
-        otherScoreText.setText("them: " + (theirScore - dimensions.length));
-       }
+        if (dimensions.stolen) {
+            theirScore -= dimensions.length;
+            console.log(theirScore);
+            if (p1) {
+                // change right
+                rightGraphics.clear();
+                rightScore = new Phaser.Geom.Rectangle(w / 2, h, w, -1 * (theirScore / 32 * h));
+                rightGraphics.fillRectShape(rightScore);
+            } else {
+                // change left
+                leftGraphics.clear();
+                leftScore = new Phaser.Geom.Rectangle(0, h, w / 2, -1 * (theirScore / 32 * h));
+                leftGraphics.fillRectShape(leftScore);
+            }
+            otherScoreText.setText("them: " + (theirScore));
+        }
     }
     Client.submitWord(currentWord, bonus, letterBagTiles, score, dimensions);
     currentWord = "";
@@ -336,7 +411,7 @@ function readTextFile(file) {
     var rawFile = new XMLHttpRequest();
     var allText;
     rawFile.open("GET", file, false);
-    rawFile.onreadystatechange = function () {
+    rawFile.onreadystatechange = function() {
         allText = rawFile.responseText;
     }
     rawFile.send(null);
@@ -425,11 +500,11 @@ function canRearrange(word) {
     for (i = 0; i < currentSquares.length; i++) {
         if (squareToLocation.has(currentSquares[i])) {
             const loc = squareToLocation.get(currentSquares[i]);
-            if(loc.left && !p1) {
+            if (loc.left && !p1) {
                 // stole a left word
                 stolen = true;
             }
-            if(!loc.left && p1) {
+            if (!loc.left && p1) {
                 // stole a right word
                 stolen = true;
             }
@@ -441,7 +516,7 @@ function canRearrange(word) {
             };
         }
     }
-return false;
+    return false;
 }
 
 function addWord(context, word, left) {
@@ -459,15 +534,15 @@ function addWord(context, word, left) {
             length: word.length
         });
         square.tint = 0xE6AC8E;
-        square.on('pointerover', function (pointer) {
+        square.on('pointerover', function(pointer) {
             this.setTint(0xE5381B);
         });
-        square.on('pointerout', function (pointer) {
+        square.on('pointerout', function(pointer) {
             if (!currentSquares.includes(this)) {
                 this.setTint(0xE6AC8E);
             }
         });
-        square.on('pointerup', function (pointer) {
+        square.on('pointerup', function(pointer) {
             this.setTint(0xE5381B);
             updateString(this, letterMap.get(this));
         });
@@ -478,14 +553,16 @@ function addWord(context, word, left) {
         square.setInteractive();
         letterMap.set(square, word[i]);
         squareToTextBox.set(square, text);
-        squares.push({ square: square, text: text });
+        squares.push({
+            square: square,
+            text: text
+        });
     }
     if (left) {
         lpos += 85;
         leftWords[leftWordCounter] = squares;
         leftWordCounter++;
-    }
-    else {
+    } else {
         rpos += 85;
         rightWords[rightWordCounter] = squares;
         rightWordCounter++;
@@ -503,10 +580,10 @@ WebFontConfig = {
     }
 };
 
-(function () {
+(function() {
     var wf = document.createElement('script');
     wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
-    '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+        '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
     wf.type = 'text/javascript';
     wf.async = 'true';
     var s = document.getElementsByTagName('script')[0];
