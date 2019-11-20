@@ -21,7 +21,8 @@ Game.print = function (data) {
     var displayName = "They";
     var points = data.score == 1 ? " point!" : " points!";
     theirScore += data.score;
-    if (theirScore >= max) {
+
+    if(theirScore >= max) {
         gameOver(false);
         return;
     }
@@ -164,7 +165,8 @@ var leftGraphics;
 var rightGraphics;
 
 function gameOver(win) {
-    if (win) {
+
+    if(win) {
         console.log('You win!');
     }
     else {
@@ -422,7 +424,8 @@ async function submitWord() {
         await sleep(1000);
         bonusImage.destroy();
     }
-    if (score >= max) {
+
+    if(score >= max) {
         gameOver(true);
     }
 }
