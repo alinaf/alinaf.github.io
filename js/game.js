@@ -73,7 +73,13 @@ Game.setTileBag = function (data) {
     start.destroy();
     letterBag = data;
     line.visible = true;
-    if (p1) drawTile(true);
+    if (p1) {
+        drawTile(true);
+        drawTile(true);
+        drawTile(true);
+        drawTile(true);
+        drawTile(true);
+    }
     var youWidth = p1 ? w / 4 : 3 * w / 4;
     var themWidth = p1 ? 3 * w / 4 : w / 4;
 
@@ -265,12 +271,15 @@ function formatTime(seconds) {
 }
 
 function onEvent() {
-    if (p1 || gameStarted) {
+    if ((p1 || gameStarted) && this.initialTime > 0) {
         this.initialTime -= 1; // One second
         timerText.setText('Timer: ' + formatTime(this.initialTime));
-        if (this.initialTime % 5 == 0) {
+        if (this.initialTime % 3 == 0) {
             drawTile(true);
         }
+    }
+    if (this.initialTime == 0) {
+        console.log("Game over!");
     }
 }
 
