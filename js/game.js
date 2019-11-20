@@ -17,10 +17,12 @@ Game.startTimer = function () {
 
 Game.print = function (data) {
     // var displayName = name ? name : "Player " + data.id;
+
     var displayName = "They";
     var points = data.score == 1 ? " point!" : " points!";
     bonusText.setText(displayName + " played " + data.word + " for " + data.score + points);
     otherScoreText.setText("them: " + data.total);
+    madeWords.add(data.word);
     addWord(context, data.word, !p1);
     letterBagTiles = data.tiles;
     draw();
@@ -79,6 +81,7 @@ var squareToIndex = new Map();
 var letterBagTiles = new Array(); // array of letters
 
 var pos = 0; // no queue in JS apparently so just use this, position in letterbag
+var madeWords = new Set();
 var plurals = new Set(); // doesn't actually work because each word needs its own memory
 // put "s" in (hacky), lots of complexities i'm skimming over
 const dictString = readTextFile("assets/words_alpha.txt").split(/\s+/);
@@ -140,7 +143,6 @@ function create() {
         fill: '#142E28'
     });
     
-
     // Each 1000 ms call onEvent
     timedEvent = this.time.addEvent({ delay: 1000, callback: onEvent, callbackScope: this, loop: true });
 
@@ -176,7 +178,7 @@ function create() {
         Client.startGame(getTileBag())
 
         p1 = true; // started game
-        hostCreateNewGame();
+        //hostCreateNewGame();
         this.destroy();
     });
 
@@ -201,17 +203,16 @@ function onEvent() {
     
 }
 
+// function hostCreateNewGame() {
+//     // Create a unique Socket.IO Room
+//     var thisGameId = (Math.random() * 100000) | 0;
 
-function hostCreateNewGame() {
-    // Create a unique Socket.IO Room
-    var thisGameId = (Math.random() * 100000) | 0;
+//     // Return the Room ID (gameId) and the socket ID (mySocketId) to the browser client
+//     this.emit('newGameCreated', { gameId: thisGameId, mySocketId: this.id });
 
-    // Return the Room ID (gameId) and the socket ID (mySocketId) to the browser client
-    this.emit('newGameCreated', { gameId: thisGameId, mySocketId: this.id });
-
-    // Join the Room and wait for the players
-    this.join(thisGameId.toString());
-};
+//     // Join the Room and wait for the players
+//     this.join(thisGameId.toString());
+// };
 
 function getTileBag() {
     var unshuffledLetterBag = new Array();
@@ -271,6 +272,9 @@ async function submitWord() {
     const errorMessage = validWord(currentWord);
     if (errorMessage != "") {
         camera.shake(700, 0.003);
+        for(square in currentSquares) {
+            currentSquares[square].setTint(0xE6AC8E);
+        }
         currentSquares = [];
         currentWordText.setText(errorMessage);
         await sleep(1000);
@@ -278,6 +282,7 @@ async function submitWord() {
         currentWordText.setText(currentWord);
         return;
     }
+    madeWords.add(currentWord);
     plurals.add(currentWord + "s");
     var bonus = calculateScore(currentWord);
     score += bonus;
@@ -332,6 +337,9 @@ function validWord(currentWord) {
 
     if (!validWords.has(currentWord)) {
         return "invalid word!";
+    }
+    if (madeWords.has(currentWord)) {
+        return "already made!";
     }
     if (plurals.has(currentWord)) {
         return "no plurals!";
