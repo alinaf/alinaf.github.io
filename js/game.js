@@ -36,7 +36,7 @@ Game.print = function (data) {
         leftGraphics.fillRectShape(leftScore);
     }
     bonusText.setText(displayName + " played " + data.word + " for " + data.score + points);
-    otherScoreText.setText("them: " + data.total);
+    //otherScoreText.setText("them: " + data.total);
     madeWords.add(data.word);
     addWord(context, data.word, !p1);
     letterBagTiles = data.tiles;
@@ -50,7 +50,7 @@ Game.print = function (data) {
         }
         if (data.dimensions.stolen) {
             score -= data.dimensions.length;
-            scoreText.setText("you: " + score);
+            //scoreText.setText("you: " + score);
             if (p1) {
                 // change left
                 leftGraphics.clear();
@@ -83,14 +83,14 @@ Game.setTileBag = function (data) {
     var youWidth = p1 ? w / 4 : 3 * w / 4;
     var themWidth = p1 ? 3 * w / 4 : w / 4;
 
-    scoreText = context.add.text(youWidth, h - 100, "you: 0", {
-        font: "40px Karla",
-        fill: '#000000'
-    });
-    otherScoreText = context.add.text(themWidth, h - 100, "them: 0", {
-        font: "40px Karla",
-        fill: '#000000'
-    });
+    // scoreText = context.add.text(youWidth, h - 100, "you: 0", {
+    //     font: "40px Karla",
+    //     fill: '#000000'
+    // });
+    // otherScoreText = context.add.text(themWidth, h - 100, "them: 0", {
+    //     font: "40px Karla",
+    //     fill: '#000000'
+    // });
 };
 
 Game.newTile = function () {
@@ -155,8 +155,8 @@ var currentWordText;
 var camera;
 var score = 0;
 var theirScore = 0;
-var scoreText;
-var otherScoreText;
+// var scoreText;
+// var otherScoreText;
 var showingMessage = false;
 var bonusText;
 var instructions;
@@ -217,7 +217,7 @@ function create() {
 
     this.initialTime = 150;
     timerText = this.add.text(w / 2, h - 50, 'Timer: ' + formatTime(this.initialTime), {
-        font: "20px Karla",
+        font: "50px Karla",
         fill: '#142E28'
     });
     timerText.setOrigin(0.5);
@@ -417,7 +417,7 @@ async function submitWord() {
     }
     var points = bonus == 1 ? " point!" : " points!";
     bonusText.setText("You played " + currentWord + " for " + bonus + points);
-    scoreText.setText("you: " + score);
+   // scoreText.setText("you: " + score);
     const dimensions = canRearrange();
     addWord(context, currentWord, p1);
     var bonusImage;
@@ -456,7 +456,7 @@ async function submitWord() {
                 leftScore = new Phaser.Geom.Rectangle(0, h, w / 2, -1 * (theirScore / 32 * h));
                 leftGraphics.fillRectShape(leftScore);
             }
-            otherScoreText.setText("them: " + (theirScore));
+         //   otherScoreText.setText("them: " + (theirScore));
         }
     }
     Client.submitWord(currentWord, bonus, letterBagTiles, score, dimensions);
