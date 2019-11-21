@@ -173,12 +173,17 @@ var leftGraphics;
 var rightGraphics;
 
 function gameOver(win) {
-
+    var endGameImage;
     if(win) {
         console.log('You win!');
+        endGameImage = context.add.sprite(700, 300, 'win');
+        endGameImage.alpha = 0.9;
+
     }
     else {
         console.log('You lose!');
+        endGameImage = context.add.sprite(700, 300, 'lose');
+        endGameImage.alpha = 0.9;
     }
 }
 
@@ -190,6 +195,8 @@ function preload() {
     this.load.image('excellent', 'assets/excellent.png');
     this.load.image('nice', 'assets/nice.png');
     this.load.image('submit', 'assets/submit.png');
+    this.load.image('win', 'assets/win.png');
+    this.load.image('lose', 'assets/lose.png');
 }
 
 function create() {
@@ -275,13 +282,14 @@ function formatTime(seconds) {
 function onEvent() {
     if ((p1 || gameStarted) && this.initialTime > 0) {
         this.initialTime -= 1; // One second
-        timerText.setText('Timer: ' + formatTime(this.initialTime));
-        if (this.initialTime % 3 == 0) {
+        timerText.setText(formatTime(this.initialTime));
+        if (this.initialTime % 5 == 0) {
             drawTile(true);
         }
     }
     if (this.initialTime == 0) {
         console.log("Game over!");
+        gameOver(score > theirScore);
     }
 }
 
