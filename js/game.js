@@ -320,7 +320,6 @@ function draw() {
         previousTiles = [];
     }
 
-    pos = 0;
     var width = 0;
     for (i = 0; i < letterBagTiles.length; i++) {
         pos = i;
@@ -360,14 +359,6 @@ function addTile() {
         width = lastWidth + 105;
         const square = context.add.sprite(width, 85, 'tile');
         square.tint = 0xE6AC8E;
-        // console.log('tiles');
-        // console.log(letterBagTiles);
-        // console.log('pos');
-
-        // console.log(pos);
-        //                 console.log('bag pos');
-
-        //console.log(letterBagTiles[pos]);
         text = context.add.text(square.x - 18, square.y - 33, letterBagTiles[pos], {
             font: "70px Merriweather",
             fill: '#FFFFFF'
