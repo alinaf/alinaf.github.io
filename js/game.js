@@ -560,6 +560,10 @@ function drawTile(isSpacebar) {
     //bagSquares[pos].visible = true;
     // squareToTextBox.get(bagSquares[pos]).visible = true;
     // pos++;
+    if(letterBagTiles.length > 10) {
+        console.log('too many letters already');
+        return;
+    }
     letterBagTiles.push(letterBag[pos]);
     addTile();
     pos++;
