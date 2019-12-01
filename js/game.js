@@ -28,11 +28,11 @@ Game.print = function (data) {
     }
     if (p1) {
         // change right
-        rightScore = new Phaser.Geom.Rectangle(w / 2, h, w, -1 * (theirScore / 32 * h));
+        rightScore = new Phaser.Geom.Rectangle(w / 2, h, w, -1 * (theirScore / 32 * (h - 165)));
         rightGraphics.fillRectShape(rightScore);
     } else {
         // change left
-        leftScore = new Phaser.Geom.Rectangle(0, h, w / 2, -1 * (theirScore / 32 * h));
+        leftScore = new Phaser.Geom.Rectangle(0, h, w / 2, -1 * (theirScore / 32 * (h - 165)));
         leftGraphics.fillRectShape(leftScore);
     }
     bonusText.setText(displayName + " played " + data.word + " for " + data.score + points);
@@ -54,12 +54,12 @@ Game.print = function (data) {
             if (p1) {
                 // change left
                 leftGraphics.clear();
-                leftScore = new Phaser.Geom.Rectangle(0, h, w / 2, -1 * (score / 32 * h));
+                leftScore = new Phaser.Geom.Rectangle(0, h, w / 2, -1 * (score / 32 * (h - 165)));
                 leftGraphics.fillRectShape(leftScore);
             } else {
                 // change right
                 rightGraphics.clear();
-                rightScore = new Phaser.Geom.Rectangle(w / 2, h, w, -1 * (score / 32 * h));
+                rightScore = new Phaser.Geom.Rectangle(w / 2, h, w, -1 * (score / 32 * (h - 165)));
                 rightGraphics.fillRectShape(rightScore);
             }
         }
@@ -413,12 +413,12 @@ async function submitWord() {
     score += bonus;
     if (p1) {
         // change left
-        leftScore = new Phaser.Geom.Rectangle(0, h, w / 2, -1 * (score / 32 * h));
+        leftScore = new Phaser.Geom.Rectangle(0, h, w / 2, -1 * (score / 32 * (h - 165)));
         leftGraphics.fillRectShape(leftScore);
 
     } else {
         // change right
-        rightScore = new Phaser.Geom.Rectangle(w / 2, h, w, -1 * (score / 32 * h));
+        rightScore = new Phaser.Geom.Rectangle(w / 2, h, w, -1 * (score / 32 * (h - 165)));
         rightGraphics.fillRectShape(rightScore);
     }
     var points = bonus == 1 ? " point!" : " points!";
@@ -454,12 +454,12 @@ async function submitWord() {
             if (p1) {
                 // change right
                 rightGraphics.clear();
-                rightScore = new Phaser.Geom.Rectangle(w / 2, h, w, -1 * (theirScore / 32 * h));
+                rightScore = new Phaser.Geom.Rectangle(w / 2, h, w, -1 * (theirScore / 32 * (h - 165)));
                 rightGraphics.fillRectShape(rightScore);
             } else {
                 // change left
                 leftGraphics.clear();
-                leftScore = new Phaser.Geom.Rectangle(0, h, w / 2, -1 * (theirScore / 32 * h));
+                leftScore = new Phaser.Geom.Rectangle(0, h, w / 2, -1 * (theirScore / 32 * (h - 165)));
                 leftGraphics.fillRectShape(leftScore);
             }
          //   otherScoreText.setText("them: " + (theirScore));
