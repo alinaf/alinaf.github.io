@@ -318,7 +318,6 @@ function getTileBag() {
 }
 
 function draw() {
-    console.log('draw');
     if (previousTiles.length != 0) {
         // delete from map
         for (i = 0; i < previousTiles.length; i++) {
@@ -330,7 +329,6 @@ function draw() {
 
     var width = 0;
     for (i = 0; i < letterBagTiles.length; i++) {
-        pos = i;
         width += 105;
         lastWidth = width;
         const square = context.add.sprite(width, 85, 'tile');
@@ -367,14 +365,14 @@ function addTile() {
         width = lastWidth + 105;
         const square = context.add.sprite(width, 85, 'tile');
         square.tint = 0xE6AC8E;
-        text = context.add.text(square.x - 18, square.y - 33, letterBagTiles[pos], {
+        text = context.add.text(square.x - 18, square.y - 33, letterBagTiles[letterBagTiles.length - 1], {
             font: "70px Merriweather",
             fill: '#FFFFFF'
         });
         square.setInteractive();
-        letterMap.set(square, letterBagTiles[pos]);
+        letterMap.set(square, letterBagTiles[letterBagTiles.length - 1]);
         squareToTextBox.set(square, text);
-        squareToIndex.set(square, pos);
+        squareToIndex.set(square, letterBagTiles.length - 1);
         previousTiles.push({
             letter: text,
             square: square
