@@ -83,14 +83,16 @@ Game.setTileBag = function (data) {
     var youWidth = p1 ? w / 4 : 3 * w / 4;
     var themWidth = p1 ? 3 * w / 4 : w / 4;
 
-    const scoreText = context.add.text(youWidth, h - 175, "yours", {
+    const scoreText = context.add.text(youWidth, h - 100, "yours", {
         font: "bold 100px Karla",
         fill: '#000000'
     });
-    const otherScoreText = context.add.text(themWidth, h - 175, "theirs", {
+    scoreText.setOrigin(0.5);
+    const otherScoreText = context.add.text(themWidth, h - 100, "theirs", {
         font: "bold 100px Karla",
         fill: '#000000'
     });
+    otherScoreText.setOrigin(0.5);
 };
 
 Game.newTile = function () {
@@ -128,8 +130,8 @@ const dictString = readTextFile("assets/words_alpha.txt").split(/\s+/);
 
 const validWords = new Set(dictString);
 
-var lpos = 225; // left current height
-var rpos = 225; // right current height
+var lpos = 430; // left current height
+var rpos = 430; // right current height
 var left = true;
 var config = {
     type: Phaser.WEBGL,
@@ -155,10 +157,9 @@ var currentWordText;
 var camera;
 var score = 0;
 var theirScore = 0;
-// var scoreText;
-// var otherScoreText;
 var showingMessage = false;
 var bonusText;
+var otherBonusText;
 var instructions;
 var instructionsShowing = false;
 var start;
@@ -200,6 +201,13 @@ function preload() {
 }
 
 function create() {
+
+    bonusText = this.add.text(w/2, 30, "GRABBLE! You turned peacock into poooooooooooock for 5 points!", {
+        font: "bold 50px Karla",
+        fill: '#000000'
+    });
+    bonusText.setOrigin(0.5);
+
     leftScore = new Phaser.Geom.Rectangle(0, h, w / 2, 0);
     rightScore = new Phaser.Geom.Rectangle(w / 2, h, w, h / 2);
     leftGraphics = this.add.graphics({
@@ -216,17 +224,21 @@ function create() {
     rightGraphics.fillRectShape(rightScore);
 
     line = this.add.line(w / 2, h / 2 + 50, 0, 0, 0, 3 * h / 4, 0xE6AC8E);
-    line.setLineWidth(3);
+    line.setLineWidth(6);
     line.visible = false;
-    divider = this.add.line(w / 2, 165, 0, 0, w, 0, 0xE6AC8E);
-    divider.setLineWidth(3);
+    divider = this.add.line(w / 2, 350, 0, 0, w, 0, 0xE6AC8E);
+    divider.setLineWidth(6);
     divider.visible = false;
 
     //this.initialTime = 150;
-    timerText = this.add.text(w / 2, 75, formatTime(this.initialTime), {
+     timerText = this.add.text(w / 2, 145, "3:00", {
         font: "bold 130px Karla",
         fill: '#142E28'
     });
+    // timerText = this.add.text(w / 2, 75, formatTime(this.initialTime), {
+    //     font: "bold 130px Karla",
+    //     fill: '#142E28'
+    // });
     timerText.setOrigin(0.5);
     // Each 1000 ms call onEvent
     // timedEvent = this.time.addEvent({
@@ -236,11 +248,6 @@ function create() {
     //     loop: true
     // });
 
-    bonusText = this.add.text(w / 2, 15, "", {
-        font: "20px Karla",
-        fill: '#000000'
-    });
-    bonusText.setOrigin(0.5);
     Client.askNewPlayer();
     context = this;
     camera = this.cameras.main;
@@ -331,9 +338,9 @@ function draw() {
     for (i = 0; i < letterBagTiles.length; i++) {
         width += 160;
         lastWidth = width;
-        const square = context.add.sprite(width, 85, 'tile');
+        const square = context.add.sprite(width, 255, 'tile');
         square.tint = 0xE6AC8E;
-        text = context.add.text(square.x - 18, square.y - 60, letterBagTiles[i], {
+        text = context.add.text(square.x - 24, square.y - 60, letterBagTiles[i], {
             font: "100px Merriweather",
             fill: '#FFFFFF'
         });
@@ -363,9 +370,9 @@ function draw() {
 
 function addTile() {
         width = lastWidth + 150;
-        const square = context.add.sprite(width, 85, 'tile');
+        const square = context.add.sprite(width, 255, 'tile');
         square.tint = 0xE6AC8E;
-        text = context.add.text(square.x - 18, square.y - 60, letterBagTiles[letterBagTiles.length - 1], {
+        text = context.add.text(square.x - 24, square.y - 60, letterBagTiles[letterBagTiles.length - 1], {
             font: "100px Merriweather",
             fill: '#FFFFFF'
         });
