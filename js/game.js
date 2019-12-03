@@ -35,7 +35,6 @@ Game.print = function (data) {
         leftScore = new Phaser.Geom.Rectangle(0, h, w / 2, -1 * (theirScore / 32 * (h - 165)));
         leftGraphics.fillRectShape(leftScore);
     }
-    bonusText.setText(displayName + " played " + data.word + " for " + data.score + points);
     //otherScoreText.setText("them: " + data.total);
     madeWords.add(data.word);
     addWord(context, data.word, !p1);
@@ -49,6 +48,7 @@ Game.print = function (data) {
             wordToDestroy[i].square.disableInteractive();
         }
         if (data.dimensions.stolen) {
+            bonusText.setText("GRABBLE! " + displayName + " turned " + data.word + " into " + data.dimensions.before + " for " + data.score + points + "!");
             score -= data.dimensions.length;
             //scoreText.setText("you: " + score);
             if (p1) {
@@ -63,6 +63,9 @@ Game.print = function (data) {
                 rightGraphics.fillRectShape(rightScore);
             }
         }
+    }
+    else {
+        bonusText.setText(displayName + " played " + data.word + " for " + data.score + points);
     }
 };
 
@@ -427,7 +430,6 @@ async function submitWord() {
         rightGraphics.fillRectShape(rightScore);
     }
     var points = bonus == 1 ? " point!" : " points!";
-    bonusText.setText("You played " + currentWord + " for " + bonus + points);
    // scoreText.setText("you: " + score);
     const dimensions = canRearrange();
     addWord(context, currentWord, p1);
@@ -476,6 +478,10 @@ async function submitWord() {
             }
          //   otherScoreText.setText("them: " + (theirScore));
         }
+        bonusText.setText("GRABBLE! You turned " + dimensions.before + " into " + currentWord + " for " + bonus + points);
+    }
+    else {
+        bonusText.setText("You played " + currentWord + " for " + bonus + points);
     }
     Client.submitWord(currentWord, bonus, letterBagTiles, score, dimensions);
     currentWord = "";
@@ -598,6 +604,7 @@ function canRearrange(word) {
                 stolen = true;
             }
             return {
+                before: loc.before,
                 left: loc.left,
                 index: loc.index,
                 length: loc.length,
@@ -618,6 +625,7 @@ function addWord(context, word, left) {
         width += 110;
         const square = context.add.sprite(width, currHeight, 'square');
         squareToLocation.set(square, {
+            before: word,
             left: left,
             index: index,
             length: word.length
