@@ -45,8 +45,8 @@ Game.print = function (data) {
         var arr = data.dimensions.left ? leftWords : rightWords;
         var wordToDestroy = arr[data.dimensions.index];
         for (i = 0; i < wordToDestroy.length; i++) {
-            wordToDestroy[i].square.destroy();
-            wordToDestroy[i].text.destroy();
+            wordToDestroy[i].square.setTint(gray);
+            wordToDestroy[i].square.disableInteractive();
         }
         if (data.dimensions.stolen) {
             score -= data.dimensions.length;
@@ -111,6 +111,7 @@ var rightWords = [];
 var rightWordCounter = 0;
 
 var lastWidth = 0;
+const gray = 0x787878;
 
 var letterBag;
 const brightBlue = "#459ac4";
@@ -124,14 +125,15 @@ var letterBagTiles = new Array(); // array of letters
 
 var pos = 0; // no queue in JS apparently so just use this, position in letterbag
 var madeWords = new Set();
+var deadLetters = new Set();
 var plurals = new Set(); // doesn't actually work because each word needs its own memory
 // put "s" in (hacky), lots of complexities i'm skimming over
 const dictString = readTextFile("assets/words_alpha.txt").split(/\s+/);
 
 const validWords = new Set(dictString);
 
-var lpos = 430; // left current height
-var rpos = 430; // right current height
+var lpos = 450; // left current height
+var rpos = 450; // right current height
 var left = true;
 var config = {
     type: Phaser.WEBGL,
@@ -202,8 +204,8 @@ function preload() {
 
 function create() {
 
-    bonusText = this.add.text(w/2, 30, "GRABBLE! You turned peacock into poooooooooooock for 5 points!", {
-        font: "bold 50px Karla",
+    bonusText = this.add.text(w/2, 30, "", {
+        font: "bold 60px Karla",
         fill: '#000000'
     });
     bonusText.setOrigin(0.5);
@@ -223,30 +225,26 @@ function create() {
     leftGraphics.fillRectShape(leftScore);
     rightGraphics.fillRectShape(rightScore);
 
-    line = this.add.line(w / 2, h / 2 + 50, 0, 0, 0, 3 * h / 4, 0xE6AC8E);
+    line = this.add.line(w / 2, h / 2 + 175, 0, 0, 0, 3 * h / 4, 0xE6AC8E);
     line.setLineWidth(6);
     line.visible = false;
-    divider = this.add.line(w / 2, 350, 0, 0, w, 0, 0xE6AC8E);
+    divider = this.add.line(w / 2, 370, 0, 0, w, 0, 0xE6AC8E);
     divider.setLineWidth(6);
     divider.visible = false;
 
-    //this.initialTime = 150;
-     timerText = this.add.text(w / 2, 145, "3:00", {
+    this.initialTime = 150;
+    timerText = this.add.text(w / 2, 135, formatTime(this.initialTime), {
         font: "bold 130px Karla",
         fill: '#142E28'
     });
-    // timerText = this.add.text(w / 2, 75, formatTime(this.initialTime), {
-    //     font: "bold 130px Karla",
-    //     fill: '#142E28'
-    // });
     timerText.setOrigin(0.5);
-    // Each 1000 ms call onEvent
-    // timedEvent = this.time.addEvent({
-    //     delay: 1000,
-    //     callback: onEvent,
-    //     callbackScope: this,
-    //     loop: true
-    // });
+    //Each 1000 ms call onEvent
+    timedEvent = this.time.addEvent({
+        delay: 1000,
+        callback: onEvent,
+        callbackScope: this,
+        loop: true
+    });
 
     Client.askNewPlayer();
     context = this;
@@ -287,17 +285,17 @@ function formatTime(seconds) {
 }
 
 function onEvent() {
-    // if ((p1 || gameStarted) && this.initialTime > 0) {
-    //     this.initialTime -= 1; // One second
-    //     timerText.setText(formatTime(this.initialTime));
-    //     if (this.initialTime % 5 == 0) {
-    //         drawTile(true);
-    //     }
-    // }
-    // if (this.initialTime == 0) {
-    //     console.log("Game over!");
-    //     gameOver(score > theirScore);
-    // }
+    if ((p1 || gameStarted) && this.initialTime > 0) {
+        this.initialTime -= 1; // One second
+        timerText.setText(formatTime(this.initialTime));
+        if (this.initialTime % 5 == 0) {
+            drawTile(true);
+        }
+    }
+    if (this.initialTime == 0) {
+        console.log("Game over!");
+        gameOver(score > theirScore);
+    }
 }
 
 // function hostCreateNewGame() {
@@ -336,9 +334,9 @@ function draw() {
 
     var width = 0;
     for (i = 0; i < letterBagTiles.length; i++) {
-        width += 160;
+        width += 150;
         lastWidth = width;
-        const square = context.add.sprite(width, 255, 'tile');
+        const square = context.add.sprite(width, 275, 'tile');
         square.tint = 0xE6AC8E;
         text = context.add.text(square.x - 24, square.y - 60, letterBagTiles[i], {
             font: "100px Merriweather",
@@ -370,7 +368,7 @@ function draw() {
 
 function addTile() {
         width = lastWidth + 150;
-        const square = context.add.sprite(width, 255, 'tile');
+        const square = context.add.sprite(width, 275, 'tile');
         square.tint = 0xE6AC8E;
         text = context.add.text(square.x - 24, square.y - 60, letterBagTiles[letterBagTiles.length - 1], {
             font: "100px Merriweather",
@@ -444,10 +442,17 @@ async function submitWord() {
     var deleteIndices = [];
     for (i = 0; i < currentSquares.length; i++) {
         if (squareToIndex.get(currentSquares[i]) != null) {
+            // from top tiles
             deleteIndices.push(squareToIndex.get(currentSquares[i]));
+            squareToTextBox.get(currentSquares[i]).destroy();
+            currentSquares[i].destroy();
         }
-        squareToTextBox.get(currentSquares[i]).destroy();
-        currentSquares[i].destroy();
+        else {
+            // invalidate
+            currentSquares[i].disableInteractive();
+            currentSquares[i].setTint(gray);
+            deadLetters.add(currentSquares[i]);
+        }
     }
     deleteIndices.sort(function (a, b) {
         return a - b;
@@ -622,7 +627,7 @@ function addWord(context, word, left) {
             this.setTint(0xE5381B);
         });
         square.on('pointerout', function (pointer) {
-            if (!currentSquares.includes(this)) {
+             if (!currentSquares.includes(this) && !deadLetters.has(this)) {
                 this.setTint(0xE6AC8E);
             }
         });
