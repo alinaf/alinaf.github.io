@@ -4,6 +4,16 @@ var name = "";
 var gameStarted = false;
 const max = 32;
 
+// colors
+const backgroundColor = 0xFFFFFF;
+const mainColor = 0xE6AC8E;
+const hoverColor = 0xE5381B;
+const gray = 0x787878;
+const levelColor = 0xFEEDE8;
+const accentColor = "#142E28"; // timer, curr word
+const textColor = 0x000000;
+const letterColor = "#FFFFFF";
+
 Game.addNewPlayer = function (id, x, y) {
     console.log('add player')
 };
@@ -28,11 +38,11 @@ Game.print = function (data) {
     }
     if (p1) {
         // change right
-        rightScore = new Phaser.Geom.Rectangle(w / 2, h, w, -1 * (theirScore / 32 * (h - 165)));
+        rightScore = new Phaser.Geom.Rectangle(w / 2, h, w, -1 * (theirScore / 32 * (h - 370)));
         rightGraphics.fillRectShape(rightScore);
     } else {
         // change left
-        leftScore = new Phaser.Geom.Rectangle(0, h, w / 2, -1 * (theirScore / 32 * (h - 165)));
+        leftScore = new Phaser.Geom.Rectangle(0, h, w / 2, -1 * (theirScore / 32 * (h - 370)));
         leftGraphics.fillRectShape(leftScore);
     }
     //otherScoreText.setText("them: " + data.total);
@@ -54,12 +64,12 @@ Game.print = function (data) {
             if (p1) {
                 // change left
                 leftGraphics.clear();
-                leftScore = new Phaser.Geom.Rectangle(0, h, w / 2, -1 * (score / 32 * (h - 165)));
+                leftScore = new Phaser.Geom.Rectangle(0, h, w / 2, -1 * (score / 32 * (h - 370)));
                 leftGraphics.fillRectShape(leftScore);
             } else {
                 // change right
                 rightGraphics.clear();
-                rightScore = new Phaser.Geom.Rectangle(w / 2, h, w, -1 * (score / 32 * (h - 165)));
+                rightScore = new Phaser.Geom.Rectangle(w / 2, h, w, -1 * (score / 32 * (h - 370)));
                 rightGraphics.fillRectShape(rightScore);
             }
         }
@@ -88,12 +98,12 @@ Game.setTileBag = function (data) {
 
     const scoreText = context.add.text(youWidth, h - 100, "yours", {
         font: "bold 100px Karla",
-        fill: '#000000'
+        fill: textColor
     });
     scoreText.setOrigin(0.5);
     const otherScoreText = context.add.text(themWidth, h - 100, "theirs", {
         font: "bold 100px Karla",
-        fill: '#000000'
+        fill: textColor
     });
     otherScoreText.setOrigin(0.5);
 };
@@ -114,10 +124,7 @@ var rightWords = [];
 var rightWordCounter = 0;
 
 var lastWidth = 0;
-const gray = 0x787878;
-
 var letterBag;
-const brightBlue = "#459ac4";
 var currentWord = "";
 var letterMap = new Map();
 var squareToTextBox = new Map();
@@ -143,7 +150,7 @@ var config = {
     width: window.innerWidth - 20,
     height: window.innerHeight - 20,
     parent: 'game',
-    backgroundColor: "#ffffff",
+    backgroundColor: backgroundColor,
     scene: {
         preload: preload,
         create: create,
@@ -182,13 +189,13 @@ function gameOver(win) {
     var endGameImage;
     if(win) {
         console.log('You win!');
-        endGameImage = context.add.sprite(700, 300, 'win');
+        endGameImage = context.add.sprite(w/2, h/2, 'win');
         endGameImage.alpha = 0.9;
 
     }
     else {
         console.log('You lose!');
-        endGameImage = context.add.sprite(700, 300, 'lose');
+        endGameImage = context.add.sprite(w/2, h/2, 'lose');
         endGameImage.alpha = 0.9;
     }
 }
@@ -209,7 +216,7 @@ function create() {
 
     bonusText = this.add.text(w/2, 30, "", {
         font: "bold 60px Karla",
-        fill: '#000000'
+        fill: textColor
     });
     bonusText.setOrigin(0.5);
 
@@ -217,28 +224,28 @@ function create() {
     rightScore = new Phaser.Geom.Rectangle(w / 2, h, w, h / 2);
     leftGraphics = this.add.graphics({
         fillStyle: {
-            color: 0xFEEDE8
+            color: levelColor
         }
     });
     rightGraphics = this.add.graphics({
         fillStyle: {
-            color: 0xFEEDE8
+            color: levelColor
         }
     });
     leftGraphics.fillRectShape(leftScore);
     rightGraphics.fillRectShape(rightScore);
 
-    line = this.add.line(w / 2, h / 2 + 175, 0, 0, 0, 3 * h / 4, 0xE6AC8E);
+    line = this.add.line(w / 2, h / 2 + 175, 0, 0, 0, 3 * h / 4, mainColor);
     line.setLineWidth(6);
     line.visible = false;
-    divider = this.add.line(w / 2, 370, 0, 0, w, 0, 0xE6AC8E);
+    divider = this.add.line(w / 2, 370, 0, 0, w, 0, mainColor);
     divider.setLineWidth(6);
     divider.visible = false;
 
     this.initialTime = 150;
     timerText = this.add.text(w / 2, 135, formatTime(this.initialTime), {
         font: "bold 130px Karla",
-        fill: '#142E28'
+        fill: accentColor,
     });
     timerText.setOrigin(0.5);
     //Each 1000 ms call onEvent
@@ -254,7 +261,7 @@ function create() {
     camera = this.cameras.main;
     currentWordText = this.add.text(w / 2, h - 200, "", {
         font: "100px Merriweather",
-        fill: '#142E28'
+        fill: accentColor,
     });
     currentWordText.setOrigin(0.5);
 
@@ -269,7 +276,6 @@ function create() {
     start.on('pointerup', function (pointer) {
         Client.startGame(getTileBag())
         p1 = true; // started game
-        //hostCreateNewGame();
         this.destroy();
         divider.visible = true;
         line.visible = true;
@@ -301,17 +307,6 @@ function onEvent() {
     }
 }
 
-// function hostCreateNewGame() {
-//     // Create a unique Socket.IO Room
-//     var thisGameId = (Math.random() * 100000) | 0;
-
-//     // Return the Room ID (gameId) and the socket ID (mySocketId) to the browser client
-//     this.emit('newGameCreated', { gameId: thisGameId, mySocketId: this.id });
-
-//     // Join the Room and wait for the players
-//     this.join(thisGameId.toString());
-// };
-
 function getTileBag() {
     var unshuffledLetterBag = new Array();
     var scrabbleDist = [9, 2, 2, 4, 12, 2, 3, 2, 9, 1, 1, 4, 2, 6, 8, 2, 1, 6, 4, 6, 4, 2, 2, 1, 2, 1];
@@ -340,11 +335,12 @@ function draw() {
         width += 150;
         lastWidth = width;
         const square = context.add.sprite(width, 275, 'tile');
-        square.tint = 0xE6AC8E;
-        text = context.add.text(square.x - 24, square.y - 60, letterBagTiles[i], {
+        square.tint = mainColor;
+        text = context.add.text(square.x, square.y, letterBagTiles[i], {
             font: "100px Merriweather",
-            fill: '#FFFFFF'
+            fill: letterColor,
         });
+        text.setOrigin(0.5)
         square.setInteractive();
         letterMap.set(square, letterBagTiles[i]);
         squareToTextBox.set(square, text);
@@ -354,15 +350,15 @@ function draw() {
             square: square
         });
         square.on('pointerover', function (pointer) {
-            this.setTint(0xE5381B);
+            this.setTint(hoverColor);
         });
         square.on('pointerout', function (pointer) {
             if (!currentSquares.includes(this)) {
-                this.setTint(0xE6AC8E);
+                this.setTint(mainColor);
             }
         });
         square.on('pointerup', function (pointer) {
-            this.setTint(0xE5381B);
+            this.setTint(hoverColor);
             updateString(this, letterMap.get(this));
         });
         bagSquares.push(square);
@@ -372,11 +368,12 @@ function draw() {
 function addTile() {
         width = lastWidth + 150;
         const square = context.add.sprite(width, 275, 'tile');
-        square.tint = 0xE6AC8E;
-        text = context.add.text(square.x - 24, square.y - 60, letterBagTiles[letterBagTiles.length - 1], {
+        square.tint = mainColor;
+        text = context.add.text(square.x, square.y, letterBagTiles[letterBagTiles.length - 1], {
             font: "100px Merriweather",
-            fill: '#FFFFFF'
+            fill: letterColor,
         });
+        text.setOrigin(0.5)
         square.setInteractive();
         letterMap.set(square, letterBagTiles[letterBagTiles.length - 1]);
         squareToTextBox.set(square, text);
@@ -386,15 +383,15 @@ function addTile() {
             square: square
         });
         square.on('pointerover', function (pointer) {
-            this.setTint(0xE5381B);
+            this.setTint(hoverColor);
         });
         square.on('pointerout', function (pointer) {
             if (!currentSquares.includes(this)) {
-                this.setTint(0xE6AC8E);
+                this.setTint(mainColor);
             }
         });
         square.on('pointerup', function (pointer) {
-            this.setTint(0xE5381B);
+            this.setTint(hoverColor);
             updateString(this, letterMap.get(this));
         });
     lastWidth += 150;
@@ -406,7 +403,7 @@ async function submitWord() {
     if (errorMessage != "") {
         camera.shake(700, 0.003);
         for (square in currentSquares) {
-            currentSquares[square].setTint(0xE6AC8E);
+            currentSquares[square].setTint(mainColor);
         }
         currentSquares = [];
         currentWordText.setText(errorMessage);
@@ -421,12 +418,12 @@ async function submitWord() {
     score += bonus;
     if (p1) {
         // change left
-        leftScore = new Phaser.Geom.Rectangle(0, h, w / 2, -1 * (score / 32 * (h - 165)));
+        leftScore = new Phaser.Geom.Rectangle(0, h, w / 2, -1 * (score / 32 * (h - 370)));
         leftGraphics.fillRectShape(leftScore);
 
     } else {
         // change right
-        rightScore = new Phaser.Geom.Rectangle(w / 2, h, w, -1 * (score / 32 * (h - 165)));
+        rightScore = new Phaser.Geom.Rectangle(w / 2, h, w, -1 * (score / 32 * (h - 370)));
         rightGraphics.fillRectShape(rightScore);
     }
     var points = bonus == 1 ? " point!" : " points!";
@@ -435,10 +432,10 @@ async function submitWord() {
     addWord(context, currentWord, p1);
     var bonusImage;
     if (bonus > 10) {
-        bonusImage = context.add.sprite(700, 300, 'excellent');
+        bonusImage = context.add.sprite(w/2, h/2, 'excellent');
         bonusImage.alpha = 0.9;
     } else if (bonus > 4) {
-        bonusImage = context.add.sprite(700, 300, 'nice');
+        bonusImage = context.add.sprite(w/2, h/2, 'nice');
         bonusImage.alpha = 0.9;
     }
     var deleteIndices = [];
@@ -468,12 +465,12 @@ async function submitWord() {
             if (p1) {
                 // change right
                 rightGraphics.clear();
-                rightScore = new Phaser.Geom.Rectangle(w / 2, h, w, -1 * (theirScore / 32 * (h - 165)));
+                rightScore = new Phaser.Geom.Rectangle(w / 2, h, w, -1 * (theirScore / 32 * (h - 370)));
                 rightGraphics.fillRectShape(rightScore);
             } else {
                 // change left
                 leftGraphics.clear();
-                leftScore = new Phaser.Geom.Rectangle(0, h, w / 2, -1 * (theirScore / 32 * (h - 165)));
+                leftScore = new Phaser.Geom.Rectangle(0, h, w / 2, -1 * (theirScore / 32 * (h - 370)));
                 leftGraphics.fillRectShape(leftScore);
             }
          //   otherScoreText.setText("them: " + (theirScore));
@@ -545,7 +542,7 @@ function deleteLetter() {
     if (!currentWord.length) return;
     currentWord = currentWord.slice(0, -1);
     currentWordText.setText(currentWord);
-    currentSquares[currentSquares.length - 1].setTint(0xE6AC8E);
+    currentSquares[currentSquares.length - 1].setTint(mainColor);
     currentSquares.pop();
 }
 
@@ -630,23 +627,24 @@ function addWord(context, word, left) {
             index: index,
             length: word.length
         });
-        square.tint = 0xE6AC8E;
+        square.tint = mainColor;
         square.on('pointerover', function (pointer) {
-            this.setTint(0xE5381B);
+            this.setTint(hoverColor);
         });
         square.on('pointerout', function (pointer) {
              if (!currentSquares.includes(this) && !deadLetters.has(this)) {
-                this.setTint(0xE6AC8E);
+                this.setTint(mainColor);
             }
         });
         square.on('pointerup', function (pointer) {
-            this.setTint(0xE5381B);
+            this.setTint(hoverColor);
             updateString(this, letterMap.get(this));
         });
-        text = context.add.text(square.x - 18, square.y - 50, word[i], {
+        text = context.add.text(square.x, square.y, word[i], {
             font: "80px Merriweather",
-            fill: '#FFFFFF'
+            fill: letterColor
         });
+        text.setOrigin(0.5)
         square.setInteractive();
         letterMap.set(square, word[i]);
         squareToTextBox.set(square, text);
