@@ -83,14 +83,14 @@ Game.setTileBag = function (data) {
     var youWidth = p1 ? w / 4 : 3 * w / 4;
     var themWidth = p1 ? 3 * w / 4 : w / 4;
 
-    // scoreText = context.add.text(youWidth, h - 100, "you: 0", {
-    //     font: "40px Karla",
-    //     fill: '#000000'
-    // });
-    // otherScoreText = context.add.text(themWidth, h - 100, "them: 0", {
-    //     font: "40px Karla",
-    //     fill: '#000000'
-    // });
+    const scoreText = context.add.text(youWidth, h - 175, "yours", {
+        font: "bold 100px Karla",
+        fill: '#000000'
+    });
+    const otherScoreText = context.add.text(themWidth, h - 175, "theirs", {
+        font: "bold 100px Karla",
+        fill: '#000000'
+    });
 };
 
 Game.newTile = function () {
@@ -222,19 +222,19 @@ function create() {
     divider.setLineWidth(3);
     divider.visible = false;
 
-    this.initialTime = 150;
-    timerText = this.add.text(w / 2, h - 50, 'Timer: ' + formatTime(this.initialTime), {
-        font: "50px Karla",
+    //this.initialTime = 150;
+    timerText = this.add.text(w / 2, 75, formatTime(this.initialTime), {
+        font: "bold 130px Karla",
         fill: '#142E28'
     });
     timerText.setOrigin(0.5);
     // Each 1000 ms call onEvent
-    timedEvent = this.time.addEvent({
-        delay: 1000,
-        callback: onEvent,
-        callbackScope: this,
-        loop: true
-    });
+    // timedEvent = this.time.addEvent({
+    //     delay: 1000,
+    //     callback: onEvent,
+    //     callbackScope: this,
+    //     loop: true
+    // });
 
     bonusText = this.add.text(w / 2, 15, "", {
         font: "20px Karla",
@@ -245,7 +245,7 @@ function create() {
     context = this;
     camera = this.cameras.main;
     currentWordText = this.add.text(w / 2, h - 200, "", {
-        font: "70px Merriweather",
+        font: "100px Merriweather",
         fill: '#142E28'
     });
     currentWordText.setOrigin(0.5);
@@ -280,17 +280,17 @@ function formatTime(seconds) {
 }
 
 function onEvent() {
-    if ((p1 || gameStarted) && this.initialTime > 0) {
-        this.initialTime -= 1; // One second
-        timerText.setText(formatTime(this.initialTime));
-        if (this.initialTime % 5 == 0) {
-            drawTile(true);
-        }
-    }
-    if (this.initialTime == 0) {
-        console.log("Game over!");
-        gameOver(score > theirScore);
-    }
+    // if ((p1 || gameStarted) && this.initialTime > 0) {
+    //     this.initialTime -= 1; // One second
+    //     timerText.setText(formatTime(this.initialTime));
+    //     if (this.initialTime % 5 == 0) {
+    //         drawTile(true);
+    //     }
+    // }
+    // if (this.initialTime == 0) {
+    //     console.log("Game over!");
+    //     gameOver(score > theirScore);
+    // }
 }
 
 // function hostCreateNewGame() {
@@ -329,12 +329,12 @@ function draw() {
 
     var width = 0;
     for (i = 0; i < letterBagTiles.length; i++) {
-        width += 105;
+        width += 160;
         lastWidth = width;
         const square = context.add.sprite(width, 85, 'tile');
         square.tint = 0xE6AC8E;
-        text = context.add.text(square.x - 18, square.y - 33, letterBagTiles[i], {
-            font: "70px Merriweather",
+        text = context.add.text(square.x - 18, square.y - 60, letterBagTiles[i], {
+            font: "100px Merriweather",
             fill: '#FFFFFF'
         });
         square.setInteractive();
@@ -362,11 +362,11 @@ function draw() {
 }
 
 function addTile() {
-        width = lastWidth + 105;
+        width = lastWidth + 150;
         const square = context.add.sprite(width, 85, 'tile');
         square.tint = 0xE6AC8E;
-        text = context.add.text(square.x - 18, square.y - 33, letterBagTiles[letterBagTiles.length - 1], {
-            font: "70px Merriweather",
+        text = context.add.text(square.x - 18, square.y - 60, letterBagTiles[letterBagTiles.length - 1], {
+            font: "100px Merriweather",
             fill: '#FFFFFF'
         });
         square.setInteractive();
@@ -389,7 +389,7 @@ function addTile() {
             this.setTint(0xE5381B);
             updateString(this, letterMap.get(this));
         });
-    lastWidth += 105;
+    lastWidth += 150;
 }
 
 async function submitWord() {
@@ -603,7 +603,7 @@ function addWord(context, word, left) {
     var squares = [];
     var index = left ? leftWordCounter : rightWordCounter;
     for (i = 0; i < word.length; i++) {
-        width += 75;
+        width += 110;
         const square = context.add.sprite(width, currHeight, 'square');
         squareToLocation.set(square, {
             left: left,
@@ -623,8 +623,8 @@ function addWord(context, word, left) {
             this.setTint(0xE5381B);
             updateString(this, letterMap.get(this));
         });
-        text = context.add.text(square.x - 18, square.y - 33, word[i], {
-            font: "50px Merriweather",
+        text = context.add.text(square.x - 18, square.y - 50, word[i], {
+            font: "80px Merriweather",
             fill: '#FFFFFF'
         });
         square.setInteractive();
@@ -636,11 +636,11 @@ function addWord(context, word, left) {
         });
     }
     if (left) {
-        lpos += 85;
+        lpos += 125;
         leftWords[leftWordCounter] = squares;
         leftWordCounter++;
     } else {
-        rpos += 85;
+        rpos += 125;
         rightWords[rightWordCounter] = squares;
         rightWordCounter++;
     }
