@@ -6,14 +6,14 @@ const max = 32;
 var isGameOver = false;
 
 // florence colors
-const backgroundColor = 0xFFFDF8;
-const mainColor = 0x132E66;
-const hoverColor = 0x4AB3EA;
-const gray = 0xC4C4BF;
-const levelColor = 0x85D4F0;
-const accentColor = "#F15A73"; // timer, curr word
-const textColor = "#000000";
-const letterColor = "#FFFFFF";
+// const backgroundColor = 0xFFFDF8;
+// const mainColor = 0x132E66;
+// const hoverColor = 0x4AB3EA;
+// const gray = 0xC4C4BF;
+// const levelColor = 0x85D4F0;
+// const accentColor = "#F15A73"; // timer, curr word
+// const textColor = "#000000";
+// const letterColor = "#FFFFFF";
 
 // analog lab colors
 // const backgroundColor = 0xFFFFFF;
@@ -37,14 +37,14 @@ const letterColor = "#FFFFFF";
 // const letterColor = "#FFFFFF";
 
 // og pink
-//  const backgroundColor = 0xFFFDF8;
-// const mainColor = 0xE6AC8E;
-// const hoverColor = 0xE5381B;
-// const gray = 0x787878;
-// const levelColor = 0xFEEDE8;
-// const accentColor = "#142E28"; // timer, curr word
-// const textColor = "#000000";
-// const letterColor = "#FFFFFF";
+ const backgroundColor = 0xFFFDF8;
+const mainColor = 0xE6AC8E;
+const hoverColor = 0xE5381B;
+const gray = 0x787878;
+const levelColor = 0xFEEDE8;
+const accentColor = "#142E28"; // timer, curr word
+const textColor = "#000000";
+const letterColor = "#FFFFFF";
 
 Game.addNewPlayer = function (id, x, y) {
     console.log('add player')
