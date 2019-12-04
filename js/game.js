@@ -5,15 +5,46 @@ var gameStarted = false;
 const max = 32;
 var isGameOver = false;
 
-// colors
-const backgroundColor = 0xFFFFFF;
-const mainColor = 0xE6AC8E;
-const hoverColor = 0xE5381B;
-const gray = 0x787878;
-const levelColor = 0xFEEDE8;
-const accentColor = "#142E28"; // timer, curr word
+// florence colors
+const backgroundColor = 0xFFFDF8;
+const mainColor = 0x132E66;
+const hoverColor = 0x4AB3EA;
+const gray = 0xC4C4BF;
+const levelColor = 0x85D4F0;
+const accentColor = "#F15A73"; // timer, curr word
 const textColor = "#000000";
 const letterColor = "#FFFFFF";
+
+// analog lab colors
+// const backgroundColor = 0xFFFFFF;
+// const hoverColor = 0xFC2483;
+// const mainColor = 0xFB7AB7;
+// const gray = 0xA9A9A9;
+// const levelColor = 0xFCCAE3;
+// const accentColor = "#1338C7"; // timer, curr word
+// const textColor = "#000000";
+// const letterColor = "#FFFFFF";
+
+
+// yellow colors
+// const backgroundColor = 0xF5EDDF;
+// const mainColor = 0x132E66;
+// const hoverColor = 0xE58A0E;
+// const gray = 0xA9A9A9;
+// const levelColor = 0xBDDAC2;
+// const accentColor = "#142E28"; // timer, curr word
+// const textColor = "#000000";
+// const letterColor = "#FFFFFF";
+
+// og pink
+//  const backgroundColor = 0xFFFDF8;
+// const mainColor = 0xE6AC8E;
+// const hoverColor = 0xE5381B;
+// const gray = 0x787878;
+// const levelColor = 0xFEEDE8;
+// const accentColor = "#142E28"; // timer, curr word
+// const textColor = "#000000";
+// const letterColor = "#FFFFFF";
 
 Game.addNewPlayer = function (id, x, y) {
     console.log('add player')
@@ -577,7 +608,7 @@ function drawTile(isSpacebar) {
     //bagSquares[pos].visible = true;
     // squareToTextBox.get(bagSquares[pos]).visible = true;
     // pos++;
-    if(letterBagTiles.length > 10) {
+    if(letterBagTiles.length > 14) {
         console.log('too many letters already');
         return;
     }
