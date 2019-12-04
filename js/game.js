@@ -3,6 +3,7 @@ var Game = {};
 var name = "";
 var gameStarted = false;
 const max = 32;
+var isGameOver = false;
 
 // colors
 const backgroundColor = 0xFFFFFF;
@@ -187,6 +188,7 @@ var rightGraphics;
 
 function gameOver(win) {
     var endGameImage;
+    isGameOver = true;
     if(win) {
         console.log('You win!');
         endGameImage = context.add.sprite(w/2, h/2, 'win');
@@ -294,7 +296,7 @@ function formatTime(seconds) {
 }
 
 function onEvent() {
-    if ((p1 || gameStarted) && this.initialTime > 0) {
+    if ((p1 || gameStarted) && (this.initialTime > 0) && (isGameOver == false)) {
         this.initialTime -= 1; // One second
         timerText.setText(formatTime(this.initialTime));
         if (this.initialTime % 5 == 0) {
