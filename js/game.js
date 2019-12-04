@@ -11,7 +11,7 @@ const hoverColor = 0xE5381B;
 const gray = 0x787878;
 const levelColor = 0xFEEDE8;
 const accentColor = "#142E28"; // timer, curr word
-const textColor = 0x000000;
+const textColor = "#000000";
 const letterColor = "#FFFFFF";
 
 Game.addNewPlayer = function (id, x, y) {
@@ -38,11 +38,11 @@ Game.print = function (data) {
     }
     if (p1) {
         // change right
-        rightScore = new Phaser.Geom.Rectangle(w / 2, h, w, -1 * (theirScore / 32 * (h - 370)));
+        rightScore = new Phaser.Geom.Rectangle(w / 2, h, w, -1 * (Math.min(theirScore / 32, 1) * (h - 370)));
         rightGraphics.fillRectShape(rightScore);
     } else {
         // change left
-        leftScore = new Phaser.Geom.Rectangle(0, h, w / 2, -1 * (theirScore / 32 * (h - 370)));
+        leftScore = new Phaser.Geom.Rectangle(0, h, w / 2, -1 * (Math.min(theirScore / 32, 1) * (h - 370)));
         leftGraphics.fillRectShape(leftScore);
     }
     //otherScoreText.setText("them: " + data.total);
@@ -64,12 +64,12 @@ Game.print = function (data) {
             if (p1) {
                 // change left
                 leftGraphics.clear();
-                leftScore = new Phaser.Geom.Rectangle(0, h, w / 2, -1 * (score / 32 * (h - 370)));
+                leftScore = new Phaser.Geom.Rectangle(0, h, w / 2, -1 * (Math.min(score / 32, 1) * (h - 370)));
                 leftGraphics.fillRectShape(leftScore);
             } else {
                 // change right
                 rightGraphics.clear();
-                rightScore = new Phaser.Geom.Rectangle(w / 2, h, w, -1 * (score / 32 * (h - 370)));
+                rightScore = new Phaser.Geom.Rectangle(w / 2, h, w, -1 * (Math.min(score / 32, 1) * (h - 370)));
                 rightGraphics.fillRectShape(rightScore);
             }
         }
@@ -418,12 +418,12 @@ async function submitWord() {
     score += bonus;
     if (p1) {
         // change left
-        leftScore = new Phaser.Geom.Rectangle(0, h, w / 2, -1 * (score / 32 * (h - 370)));
+        leftScore = new Phaser.Geom.Rectangle(0, h, w / 2, -1 * (Math.min(score / 32, 1) * (h - 370)));
         leftGraphics.fillRectShape(leftScore);
 
     } else {
         // change right
-        rightScore = new Phaser.Geom.Rectangle(w / 2, h, w, -1 * (score / 32 * (h - 370)));
+        rightScore = new Phaser.Geom.Rectangle(w / 2, h, w, -1 * (Math.min(score / 32, 1) * (h - 370)));
         rightGraphics.fillRectShape(rightScore);
     }
     var points = bonus == 1 ? " point!" : " points!";
@@ -465,12 +465,12 @@ async function submitWord() {
             if (p1) {
                 // change right
                 rightGraphics.clear();
-                rightScore = new Phaser.Geom.Rectangle(w / 2, h, w, -1 * (theirScore / 32 * (h - 370)));
+                rightScore = new Phaser.Geom.Rectangle(w / 2, h, w, -1 * (Math.min(theirScore / 32, 1) * (h - 370)));
                 rightGraphics.fillRectShape(rightScore);
             } else {
                 // change left
                 leftGraphics.clear();
-                leftScore = new Phaser.Geom.Rectangle(0, h, w / 2, -1 * (theirScore / 32 * (h - 370)));
+                leftScore = new Phaser.Geom.Rectangle(0, h, w / 2, -1 * (Math.min(theirScore / 32, 1) * (h - 370)));
                 leftGraphics.fillRectShape(leftScore);
             }
          //   otherScoreText.setText("them: " + (theirScore));
