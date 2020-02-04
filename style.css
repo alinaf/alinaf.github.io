@@ -32,21 +32,28 @@ h1 {
 }
 
 h2 {
-  color: #96979c;
+  color: #505050;
   font-weight: 300;
   margin: 0 0 0.5em 0;
 }
 
 a {
-  color: #96979c;
+  color: #505050;
 }
 a:hover {
   font-weight: bold;
 }
 
-.games img {
-  width: 70%;
-  text-align: center;
+.game {
+  margin-bottom: 50px;
+}
+
+.game img {
+  width: 80%;
+}
+
+.game video {
+  width: 80%;
 }
 
 .links {
